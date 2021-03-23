@@ -32,7 +32,7 @@ class _LoginState extends State<Login> {
         await _firebaseAuth.signInWithCredential(credential);
     ProviderDetails providerInfo = new ProviderDetails(userDetails.providerId);
 
-    List<ProviderDetails> providerData = new List<ProviderDetails>();
+    List<ProviderDetails> providerData = <ProviderDetails>[];
     providerData.add(providerInfo);
 
     UserDetails details = new UserDetails(
@@ -53,14 +53,54 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SignInButton(
-            buttonType: ButtonType.google,
-            onPressed: () => _signIn(context)
-                .then((FirebaseUser user) => print(user))
-                .catchError((e) => print(e))),
-      ),
+    return SafeArea(
+      child: Stack(children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/photo/SplashGIF.gif'),
+                fit: BoxFit.cover),
+          ),
+        ),
+        Container(
+          color: Colors.green.withOpacity(0.7),
+        ),
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              Text(
+                "WELCOME",
+                style: TextStyle(
+                    fontSize: 70,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              Spacer(),
+              Text(
+                "The Cloud Based APP for your Farm",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 30,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              Spacer(),
+              Center(
+                child: SignInButton(
+                    buttonType: ButtonType.google,
+                    onPressed: () => _signIn(context)
+                        .then((FirebaseUser user) => print(user))
+                        .catchError((e) => print(e))),
+              ),
+              Spacer(),
+            ],
+          ),
+        ),
+      ]),
     );
   }
 }

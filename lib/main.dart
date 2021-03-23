@@ -3,6 +3,7 @@ import 'login.dart';
 import 'spalsh.dart';
 import 'home.dart';
 
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
         '/home': (_) => Home(),
         '/splash': (_) => Splash(),
         '/login': (_) => Login(),
+       
       },
     );
   }
