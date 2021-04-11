@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'spalsh.dart';
 import 'home.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-
-void main() => runApp(MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -16,7 +20,7 @@ class MyApp extends StatelessWidget {
         '/home': (_) => Home(),
         '/splash': (_) => Splash(),
         '/login': (_) => Login(),
-       
+        //'/gSignin': (_) =>
       },
     );
   }
