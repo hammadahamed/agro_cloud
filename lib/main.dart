@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
         '/home': (_) => Home(),
         '/splash': (_) => Splash(),
         '/login': (_) => Login(),
-        //'/gSignin': (_) =>
       },
     );
   }

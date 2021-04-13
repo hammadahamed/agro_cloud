@@ -52,39 +52,29 @@ class _LoginState extends State<Login> {
               ),
               Spacer(),
               Center(
-                child:  SignInButton(
-                        buttonType: ButtonType.google,
-
-                        onPressed: () async{
-                          googleSignIn.signIn().then((userData) {
-                            setState(() {
-                             // isLoggedin = true;
-                              userObj = userData;
-                            }); 
-                          }).catchError((e) {
-                            print(e);
-                          });
-                          await Future.delayed(Duration(milliseconds: 2000));
-                          print("alldata:");
-                          print(userObj);
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => Home(
-                                        detailsUser: userObj,
-                                      )));
-                          //print(userObj.displayName + userObj.email);
-                        },
-                        // onPressed: () => _signIn(context)
-                        //     .then((FirebaseUser user) => print(user))
-                        //     .catchError((e) => print(e))
-                      ),
+                child: SignInButton(
+                  buttonType: ButtonType.google,
+                  onPressed: () async {
+                    googleSignIn.signIn().then((userData) {
+                      setState(() {
+                        userObj = userData;
+                      });
+                      Navigator.pushReplacement(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => Home(
+                                    detailsUser: userObj,
+                                  )));
+                    }).catchError((e) {
+                      print(e);
+                    });
+                    // await Future.delayed(Duration(milliseconds: 2000));
+                    // print("alldata:");
+                    // print(userObj);
+                  },
+                ),
               ),
               Spacer(),
-              // Center(
-              //
-              //   ),
-              // )
             ],
           ),
         ),

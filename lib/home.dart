@@ -1,154 +1,186 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'login.dart';
 
 class Home extends StatefulWidget {
   final GoogleSignInAccount detailsUser;
-
   Home({Key key, this.detailsUser}) : super(key: key);
-
   @override
   _Home createState() => _Home();
 }
 
 class _Home extends State<Home> {
   GoogleSignIn googleSignIn = GoogleSignIn();
-
   final fb = FirebaseDatabase.instance;
   final myController = TextEditingController();
-  final name = "Name";
-
-  var retrievedName;
-  var retrievedHumidity;
-  var retrievedTemperature;
-  var retrievedLED;
+  // var retrievedName;
+  // var retrievedHumidity;
+  // var retrievedTemperature;
+  // var retrievedLED;
+  bool ledStatus = false;
 
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
+
     return Scaffold(
         appBar: AppBar(
           title: Text("Agro Cloud"),
-          automaticallyImplyLeading: false,
           actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.exit_to_app,
-                size: 20.0,
-                color: Colors.white,
+            InkWell(
+              onTap: () {
+                print("image clicked");
+                showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                          content: Container(
+                              height: 150,
+                              child: Column(
+                                children: [
+                                  SizedBox(width: 15),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CircleAvatar(
+                                          radius: 20.0,
+                                          backgroundImage: NetworkImage(
+                                              widget.detailsUser.photoUrl),
+                                        ),
+                                      ),
+                                      Text(
+                                        widget.detailsUser.displayName,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(widget.detailsUser.email),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 15),
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        await googleSignIn.signOut();
+                                        // Navigator.of(context).pushReplacement(
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) => Login()));
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Login()),
+                                            (route) => false);
+                                      },
+                                      child: Text("Sign Out"),
+                                    ),
+                                  )
+                                ],
+                              )),
+                        ));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  radius: 20.0,
+                  backgroundImage: NetworkImage(widget.detailsUser.photoUrl),
+                ),
               ),
-              onPressed: () {},
             ),
+            // IconButton(
+            //   icon: Icon(
+            //     Icons.exit_to_app,
+            //     size: 20.0,
+            //     color: Colors.white,
+            //   ),
+            //   tooltip: "EXIT",
+            //   onPressed: () async {
+            //     await googleSignIn.signOut();
+
+            //   },
+            // ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // CircleAvatar(
-                //   backgroundImage: NetworkImage(widget.detailsUser.photoUrl),
-                //   radius: 50.0,
-                // ),
-                // SizedBox(height: 10.0),
-                // Text(
-                //   "Name : " + widget.detailsUser.displayName,
-                //   style: TextStyle(
-                //       fontWeight: FontWeight.bold,
-                //       color: Colors.black,
-                //       fontSize: 20.0),
-                // ),
-                // SizedBox(height: 10.0),
-                // Text(
-                //   "Email : " + widget.detailsUser.email,
-                //   style: TextStyle(
-                //       fontWeight: FontWeight.bold,
-                //       color: Colors.black,
-                //       fontSize: 20.0),
-                // ),
-                // SizedBox(height: 10.0),
-                // // Text(
-                // //   "Provider : " + widget.detailsUser.,
-                // //   style:  TextStyle(fontWeight: FontWeight.bold, color: Colors.black,fontSize: 20.0),
-                // // ),
-                // ElevatedButton(
-                //     child: Text("Get Data"),
-                //     onPressed: () {
-                //       // googleSignIn.signOut().then((value) async {
-                //       //   await Future.delayed(Duration(milliseconds: 3000));
-                //       //   Navigator.pop(context);
-                //       //   // Navigator.pushNamed(context, '/login');
-                //       // }).catchError((e) {
-                //       //   print(e);
-                //       // });
-                //       // print('Signed out');
-                //     }),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: <Widget>[
-                //     Text(name),
-                //     SizedBox(width: 20),
-                //     Expanded(child: TextField(controller: myController)),
-                //   ],
-                // ),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     ref.child(name).set(myController.text);
-                //   },
-                //   child: Text("Submit"),
-                // ),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.child("DHT11Humidity").once().then((DataSnapshot data) {
-                      print(data.value);
-                      print(data.key);
-                      setState(() {
-                        retrievedHumidity = data.value;
-                      });
-                    });
-                    ref
-                        .child("DHT11Temperature")
-                        .once()
-                        .then((DataSnapshot data) {
-                      print(data.value);
-                      print(data.key);
-                      setState(() {
-                        retrievedTemperature = data.value;
-                      });
-                    });
-                    ref.child("LED").once().then((DataSnapshot data) {
-                      print(data.value);
-                      print(data.key);
-                      setState(() {
-                        retrievedLED = data.value.toString();
-                      });
-                    });
-                  },
-                  child: Text("Get All Data"),
+        body: StreamBuilder(
+          stream: ref.onValue,
+          builder: (context, snap) {
+            return SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    // //   "Provider : " + widget.detailsUser.,
+                    ElevatedButton(
+                      onPressed: () {
+                        print(snap.data.snapshot.value["DHT11Humidity"]);
+                        // ref.child("DHT11Humidity").once().then((DataSnapshot data)
+                        // {
+                        //   print(data.value);
+                        //   print(data.key);
+                        //   setState(() {
+                        //     retrievedHumidity = data.value;
+                        //   });
+                        // });
+                        // ref
+                        //     .child("DHT11Temperature")
+                        //     .once()
+                        //     .then((DataSnapshot data) {
+                        //   print(data.value);
+                        //   print(data.key);
+                        //   setState(() {
+                        //     retrievedTemperature = data.value;
+                        //   });
+                        // });
+                        // ref.child("LED").once().then((DataSnapshot data) {
+                        //   print(data.value);
+                        //   print(data.key);
+                        //   setState(() {
+                        //     retrievedLED = data.value.toString();
+                        //     if (retrievedLED == "0") {
+                        //       ledStatus = false;
+                        //     } else {
+                        //       ledStatus = true;
+                        //     }
+                        //   });
+                        // });
+                      },
+                      child: Text("Get All Data"),
+                    ),
+                    ListTile(
+                      title: Text("Humidity"),
+                      trailing: Text(snap.data.snapshot.value["DHT11Humidity"]),
+                    ),
+                    ListTile(
+                      title: Text("Temperature"),
+                      trailing:
+                          Text(snap.data.snapshot.value["DHT11Temperature"]),
+                    ),
+                    ListTile(
+                      title: Text("Led Status"),
+                      trailing: snap.data.snapshot.value["LED"] == 0
+                          ? Text("OFF")
+                          : Text("ON"),
+                    ),
+                    ListTile(
+                      title: Text("Switch"),
+                      trailing: Switch(
+                          value: ledStatus,
+                          onChanged: (value) {
+                            setState(() {
+                              ledStatus = value;
+                              if (ledStatus) {
+                                ref.child("LED").set(1);
+                              } else {
+                                ref.child("LED").set(0);
+                              }
+                              print(ledStatus);
+                            });
+                          }),
+                    )
+                  ],
                 ),
-                ListTile(
-                  title: Text("Humidity"),
-                  trailing: Text(retrievedHumidity ?? ""),
-                ),
-                ListTile(
-                  title: Text("Temperature"),
-                  trailing: Text(retrievedTemperature ?? ""),
-                ),
-                ListTile(
-                  title: Text("Led Status"),
-                  trailing: retrievedLED == "0" ? Text("OFF") : Text("ON"),
-                ),
-                //Text(retrievedName ?? ""),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ));
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    myController.dispose();
-    super.dispose();
   }
 }
