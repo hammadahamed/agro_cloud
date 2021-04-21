@@ -8,7 +8,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'datasTable.dart';
 
-
 class Home extends StatefulWidget {
   final GoogleSignInAccount detailsUser;
   Home({Key key, this.detailsUser}) : super(key: key);
@@ -58,38 +57,37 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     });
   }
 
+  Widget oneThirdContainer({Widget content}) {
+    return Container(
+      width: MediaQuery.of(context).size.width / 4,
+      child: content,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
 
     return Scaffold(
+        drawer: Drawer(),
         appBar: AppBar(
-          title: Text("Agro Cloud"),
+          iconTheme: IconThemeData(color: Colors.blueGrey),
+          foregroundColor: Colors.blueGrey,
+          backgroundColor: Colors.white,
+          title: Text(
+            "Agro Cloud",
+            style: TextStyle(
+                fontFamily: "NunitoSans-semibold", color: Colors.blueGrey),
+          ),
           actions: <Widget>[
             InkWell(
               onTap: () {
                 Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) =>
-                            User(userdetails: widget.detailsUser)));
-                // showDialog(
-                //   context: context,
-                //   builder: (BuildContext context) {
-                //     return AlertDialog(
-                //       title: Center(child: Text("Menu")),
-                //       content: Container(
-                //         height: 250,
-                //         child: StatefulBuilder(
-                //           builder:
-                //               (BuildContext context, StateSetter setState) {
-                //             return
-                //           },
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // );
+                  context,
+                  new MaterialPageRoute(
+                    builder: (context) => User(userdetails: widget.detailsUser),
+                  ),
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -162,6 +160,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                       Text(
                                         "Disconnected",
                                         style: TextStyle(
+                                            fontFamily: "NunitoSans-regular",
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Spacer(),
@@ -174,123 +173,226 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                           //       .toString()),
                           // ),
                           SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                  height: 150,
-                                  width: 150,
-                                  child: Card(
-                                      elevation: 15,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text("Humidity",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20)),
-                                            SvgPicture.asset(
-                                              'assets/icons/humidity.svg',
-                                              height: 80,
-                                            ),
-                                            Text(
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            height: MediaQuery.of(context).size.height / 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                    height:
+                                        (MediaQuery.of(context).size.height /
+                                                2) /
+                                            3.3,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Card(
+                                        child: Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Image(
+                                                height: 30,
+                                                image: AssetImage(
+                                                  'assets/photo/humidity.png',
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              oneThirdContainer(
+                                                content: Text(
+                                                  "HUMIDITY",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "NunitoSans-bold",
+                                                      fontSize: 15),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          oneThirdContainer(
+                                            content: Text(
                                               snap.data.snapshot
                                                   .value["DHT11Humidity"],
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20),
-                                            )
-                                          ],
-                                        ),
-                                      ))),
-                              Container(
-                                  height: 150,
-                                  width: 150,
-                                  child: Card(
-                                      elevation: 15,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text("Temperature",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20)),
-                                            SvgPicture.asset(
-                                              'assets/icons/thermometer.svg',
-                                              height: 80,
+                                                  fontFamily:
+                                                      "NunitoSans-light",
+                                                  fontSize: 28),
                                             ),
-                                            Text(
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.chevron_right),
+                                            onPressed: () {},
+                                          )
+                                        ],
+                                      ),
+                                    ))),
+                                Container(
+                                  height:
+                                      (MediaQuery.of(context).size.height / 2) /
+                                          3.3,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Card(
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/icons/thermometer.svg',
+                                                height: 30,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              oneThirdContainer(
+                                                content: Text(
+                                                  "TEMPERATURE",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "NunitoSans-bold",
+                                                      fontSize: 15),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          oneThirdContainer(
+                                            content: Text(
                                                 snap.data.snapshot
                                                     .value["DHT11Temperature"],
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20))
-                                          ],
-                                        ),
-                                      ))),
-                            ],
+                                                    fontFamily:
+                                                        "NunitoSans-light",
+                                                    fontSize: 28)),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.chevron_right),
+                                            onPressed: () {},
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height:
+                                      (MediaQuery.of(context).size.height / 2) /
+                                          3.3,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Card(
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                'assets/photo/soilmoisture.png',
+                                                height: 45,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              oneThirdContainer(
+                                                content: Text(
+                                                  "SOIL MOISTURE",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "NunitoSans-bold",
+                                                      fontSize: 15),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          oneThirdContainer(
+                                            content: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child: Text(
+                                                "30%",
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        "NunitoSans-light",
+                                                    fontSize: 28),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.chevron_right),
+                                            onPressed: () {},
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+
                           SizedBox(height: 20),
                           Container(
-                              height: 150,
-                              width: 150,
-                              child: Card(
-                                  elevation: 15,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text("Soil Moisture",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)),
-                                        Image.asset(
-                                          'assets/photo/soilmoisture.png',
-                                          height: 80,
-                                        ),
-                                        Text("30%",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20))
-                                      ],
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.red.shade200,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
+                              height: 100,
+                              width: 100,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      child: Text(
+                                        "Control Switch",
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
-                                  ))),
-                          SizedBox(height: 20),
-                          Container(
-                              height: 150,
-                              width: 150,
-                              child: Card(
-                                  elevation: 15,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text("Control Switch"),
-                                        FlutterSwitch(
-                                          showOnOff: true,
-                                          activeTextColor: Colors.black,
-                                          inactiveTextColor: Colors.blue[50],
-                                          value: ledStatus,
-                                          onToggle: (value) {
-                                            setState(() {
-                                              ledStatus = value;
-                                              if (ledStatus) {
-                                                ref.child("LED").set(1);
-                                              } else {
-                                                ref.child("LED").set(0);
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      ],
+                                    FlutterSwitch(
+                                      activeToggleColor: Colors.green,
+                                      activeColor: Colors.black12,
+                                      inactiveColor: Colors.black26,
+                                      toggleSize: 20,
+                                      valueFontSize: 15,
+                                      width: 60,
+                                      height: 25,
+                                      showOnOff: true,
+                                      activeTextColor: Colors.black,
+                                      inactiveTextColor: Colors.blue[50],
+                                      value: ledStatus,
+                                      onToggle: (value) {
+                                        setState(() {
+                                          ledStatus = value;
+                                          if (ledStatus) {
+                                            ref.child("LED").set(1);
+                                          } else {
+                                            ref.child("LED").set(0);
+                                          }
+                                        });
+                                      },
                                     ),
-                                  ))),
+                                  ],
+                                ),
+                              )),
                           SizedBox(height: 50),
                           ElevatedButton(
                             onPressed: () {

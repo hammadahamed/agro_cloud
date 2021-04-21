@@ -24,8 +24,21 @@ class _LoginState extends State<Login> {
                 fit: BoxFit.cover),
           ),
         ),
-        Container(
-          color: Colors.green.withOpacity(0.5),
+        // pit stop
+        Opacity(
+          opacity: .8,
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white,
+                // Colors.black54,
+                Colors.black,
+              ],
+            )),
+          ),
         ),
         Material(
           color: Colors.transparent,
@@ -33,21 +46,36 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Spacer(),
+              // pit stop
               Text(
                 "WELCOME",
                 style: TextStyle(
+                    shadows: [
+                      Shadow(
+                        blurRadius: 2.0,
+                        color: Colors.black12,
+                        offset: Offset(4.0, 1.0),
+                      ),
+                    ],
                     fontSize: 70,
-                    fontWeight: FontWeight.bold,
+                    fontFamily: "NunitoSans-regular",
+                    fontWeight: FontWeight.w200,
                     color: Colors.white),
               ),
-              Spacer(),
               Text(
-                "The Cloud Based APP for your Farm",
+                "THE CLOUD BASED APP FOR YOUR SYSTEM",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 30,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 2.0,
+                        color: Colors.black45,
+                        offset: Offset(1.0, 1.0),
+                      ),
+                    ],
+                    fontSize: 16,
+                    fontFamily: "NunitoSans-semibold",
+                    fontWeight: FontWeight.w200,
                     color: Colors.white),
               ),
               Spacer(),
@@ -56,6 +84,7 @@ class _LoginState extends State<Login> {
                   buttonType: ButtonType.google,
                   onPressed: () async {
                     googleSignIn.signIn().then((userData) {
+                      print("++++++++++++im wornig");
                       setState(() {
                         userObj = userData;
                       });
