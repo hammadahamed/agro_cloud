@@ -38,29 +38,35 @@ getCsv(List<String> time, List<String> date, List<String> humidity,
   print(variable);
   if (variable[Permission.storage] == PermissionStatus.denied) {
     Get.snackbar("Failed", "please get permission",
-        snackPosition: SnackPosition.BOTTOM);
+        snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red,dismissDirection: SnackDismissDirection.HORIZONTAL);
+        return ;
     // We didn't ask for permission yet or the permission has been denied before but not permanently.
   }
 
 // // You can can also directly ask the permission about its status.
-// if (await Permission.location.isRestricted.isGranted) {
-//   // The OS restricts access, for example because of parental controls.
-// }
+if (await Permission.storage.isRestricted) {
+  Get.snackbar("Failed", "please Change in Settings",
+        snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red,dismissDirection: SnackDismissDirection.HORIZONTAL);
+        return;
+  // The OS restricts access, for example because of parental controls.
+}
 
 //   PermissionStatus permissionResult = await SimplePermissions.requestPermission(
 //       Permission.WriteExternalStorage);
-//   if (permissionResult == PermissionStatus.authorized) {
-// //store file in documents folder
+  if (await Permission.storage.isGranted)  {
+//store file in documents folder
 
-//     String dir =
-//         (await getExternalStorageDirectory()).absolute.path + "/documents";
-//     file = "$dir";
-//     print(" FILE " + file);
-//     File f = new File(file + "filename.csv");
+    String dir =
+        (await getExternalStorageDirectory()).absolute.path + "/documents";
+    file = "$dir";
+    print(" FILE " + file);
+    File f = new File(file + "filename.csv");
 
-// // convert rows to String and write as csv file
+// convert rows to String and write as csv file
 
-//     String csv = const ListToCsvConverter().convert(rows);
-//     f.writeAsString(csv);
-//   }
+    String csv = const ListToCsvConverter().convert(rows);
+    f.writeAsString(csv);
+    Get.snackbar("Success", "File Created Successfully",
+        snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.green,dismissDirection: SnackDismissDirection.HORIZONTAL);
+  }
 }
