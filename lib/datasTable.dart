@@ -1,10 +1,9 @@
-import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:csv/csv.dart';
-import 'package:permission/permission.dart';
+// import 'package:csv/csv.dart';
+// import 'package:permission/permission.dart';
 
 class DatasTable extends StatefulWidget {
   @override
@@ -113,7 +112,7 @@ class _DatasTableState extends State<DatasTable> {
   @override
   Widget build(BuildContext context) {
     // SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
-    final ref = fb.reference();
+    // final ref = fb.reference();
     return Scaffold(
         appBar: AppBar(
           title: Text("All Data Log"),
@@ -143,7 +142,6 @@ class _DatasTableState extends State<DatasTable> {
                           ),
                         ),
                         DataColumn(
-                          
                           label: Text(
                             'Time',
                             style: TextStyle(fontStyle: FontStyle.italic),
