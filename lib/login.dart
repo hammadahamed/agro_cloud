@@ -68,9 +68,6 @@ class _LoginState extends State<Login> {
                     }).catchError((e) {
                       print(e);
                     });
-                    // await Future.delayed(Duration(milliseconds: 2000));
-                    // print("alldata:");
-                    // print(userObj);
                   },
                 ),
               ),
