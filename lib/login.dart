@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sign_button/sign_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'home.dart';
@@ -100,7 +101,20 @@ class _LoginState extends State<Login> {
                   },
                 ),
               ),
-              Spacer(),
+
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(Home(guest: true));
+                },
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white)),
+                child: Text("Login as Guest",
+                    style: TextStyle(color: Colors.black)),
+              ),
+              SizedBox(
+                height: 200,
+              ),
             ],
           ),
         ),

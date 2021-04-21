@@ -10,7 +10,8 @@ import 'datasTable.dart';
 
 class Home extends StatefulWidget {
   final GoogleSignInAccount detailsUser;
-  Home({Key key, this.detailsUser}) : super(key: key);
+  final bool guest;
+  Home({Key key, this.detailsUser, this.guest}) : super(key: key);
   @override
   _Home createState() => _Home();
 }
@@ -85,7 +86,10 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                 Navigator.push(
                   context,
                   new MaterialPageRoute(
-                    builder: (context) => User(userdetails: widget.detailsUser),
+                    builder: (context) => User(
+                      userdetails: widget.detailsUser,
+                      guest: widget.guest,
+                    ),
                   ),
                 );
               },
@@ -94,8 +98,15 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                 child: Hero(
                   tag: "avatar",
                   child: CircleAvatar(
+                    backgroundColor: widget.guest ? Colors.blueGrey : null,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
                     radius: 20.0,
-                    backgroundImage: NetworkImage(widget.detailsUser.photoUrl),
+                    backgroundImage: widget.guest
+                        ? null
+                        : NetworkImage(widget.detailsUser.photoUrl),
                   ),
                 ),
               ),
