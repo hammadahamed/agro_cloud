@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:csv/csv.dart';
-import 'package:permission/permission.dart';
+
+import 'exportCSV.dart';
 
 class DatasTable extends StatefulWidget {
   @override
@@ -69,41 +67,6 @@ class _DatasTableState extends State<DatasTable> {
     }
   }
 
-//   getCsv() async {
-
-//  //create an element rows of type list of list. All the above data set are stored in associate list
-// //Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
-
-//  List<List<dynamic>> rows = dateTime;
-//   for (int i = 0; i <time.length;i++) {
-
-// //row refer to each column of a row in csv file and rows refer to each row in a file
-//     List<dynamic> row = List();
-//     row.add(associateList[i].name);
-//     row.add(associateList[i].gender);
-//     row.add(associateList[i].age);
-//     rows.add(row);
-//   }
-
-//  await SimplePermissions.requestPermission(Permission. WriteExternalStorage);
-//   bool checkPermission=await SimplePermissions.checkPermission(Permission.WriteExternalStorage);
-//   if(checkPermission) {
-
-// //store file in documents folder
-
-//     String dir = (await getExternalStorageDirectory()).absolute.path + "/documents";
-//     file = "$dir";
-//     print(LOGTAG+" FILE " + file);
-//     File f = new File(file+"filename.csv");
-
-// // convert rows to String and write as csv file
-
-//     String csv = const ListToCsvConverter().convert(rows);
-//     f.writeAsString(csv);
-//   }
-
-// }
-
   @override
   void initState() {
     allData();
@@ -123,7 +86,7 @@ class _DatasTableState extends State<DatasTable> {
                 onPressed: () {
                   allData();
                 },
-                icon: Icon(Icons.refresh))
+                icon: Icon(Icons.refresh)),
           ],
         ),
         body: SingleChildScrollView(
@@ -135,33 +98,41 @@ class _DatasTableState extends State<DatasTable> {
                   ? Center(child: CircularProgressIndicator())
                   : SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: DataTable(columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            'Date',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                        DataColumn(
-                          
-                          label: Text(
-                            'Time',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Temperature',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Humidity',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ], rows: allRow),
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                getCsv(time,date,temperature,humidity);
+                              },
+                              child: Text("Export")),
+                          DataTable(columns: const <DataColumn>[
+                            DataColumn(
+                              label: Text(
+                                'Date',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Time',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Temperature',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Humidity',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ], rows: allRow),
+                        ],
+                      ),
                     )
             ],
           )),
