@@ -55,6 +55,7 @@ class _DatasTableState extends State<DatasTable> {
       setState(() {
         allRow.add(
           DataRow(
+            selected: i % 2 == 0 ? true : false,
             cells: <DataCell>[
               DataCell(Text(date[i])),
               DataCell(Text(time[i])),
@@ -102,7 +103,7 @@ class _DatasTableState extends State<DatasTable> {
                         children: [
                           ElevatedButton(
                               onPressed: () {
-                                getCsv(time,date,temperature,humidity);
+                                getCsv(time, date, temperature, humidity);
                               },
                               child: Text("Export")),
                           DataTable(columns: const <DataColumn>[

@@ -300,10 +300,13 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                           children: [
                                             Row(
                                               children: [
-                                                Image(
-                                                  height: 30,
-                                                  image: AssetImage(
-                                                    'assets/photo/humidity.png',
+                                                Hero(
+                                                  tag:"HumIcon",
+                                                                                                  child: Image(
+                                                    height: 30,
+                                                    image: AssetImage(
+                                                      'assets/photo/humidity.png',
+                                                    ),
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -355,9 +358,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                           children: [
                                             Row(
                                               children: [
-                                                SvgPicture.asset(
-                                                  'assets/icons/thermometer.svg',
-                                                  height: 30,
+                                                Hero(
+                                                  tag:"ThermoIcon",
+                                                                                                  child: SvgPicture.asset(
+                                                    'assets/icons/thermometer.svg',
+                                                    height: 30,
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   width: 10,
@@ -409,9 +415,11 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                           children: [
                                             Row(
                                               children: [
-                                                Image.asset(
-                                                  'assets/photo/soilmoisture.png',
-                                                  height: 45,
+                                                Hero(tag:"SoilMoisIcon",
+                                                                                                  child: Image.asset(
+                                                    'assets/photo/soilmoisture.png',
+                                                    height: 45,
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   width: 10,
