@@ -3,10 +3,12 @@ import 'package:agro_cloud/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'datasTable.dart';
+import 'package:agro_cloud/controls.dart';
 
 class Home extends StatefulWidget {
   final GoogleSignInAccount detailsUser;
@@ -19,7 +21,6 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> with TickerProviderStateMixin {
   GoogleSignIn googleSignIn = GoogleSignIn();
   final fb = FirebaseDatabase.instance;
-  bool ledStatus = false;
   bool isLiveState = false;
   bool isDark = false;
 
@@ -130,17 +131,18 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                           print("==========");
                         }),
                     sideTile(
+                        title: "Controls",
+                        function: () {
+                          // print("==========");
+                          Get.to(Controls());
+                        }),
+                    sideTile(
                         title: "Temperature log",
                         function: () {
                           print("==========");
                         }),
                     sideTile(
                         title: "Humidity log",
-                        function: () {
-                          print("==========");
-                        }),
-                    sideTile(
-                        title: "Controls",
                         function: () {
                           print("==========");
                         }),
@@ -443,55 +445,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                             ),
 
                             SizedBox(height: 20),
-                            Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black12,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50))),
-                                height: 100,
-                                width: 100,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                        child: Text(
-                                          "Control Switch",
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      FlutterSwitch(
-                                        activeToggleColor: Colors.green,
-                                        activeColor: Colors.black12,
-                                        inactiveColor: Colors.black26,
-                                        toggleSize: 20,
-                                        valueFontSize: 15,
-                                        width: 60,
-                                        height: 25,
-                                        showOnOff: true,
-                                        activeTextColor: Colors.black,
-                                        inactiveTextColor: Colors.blue[50],
-                                        value: ledStatus,
-                                        onToggle: (value) {
-                                          setState(() {
-                                            ledStatus = value;
-                                            if (ledStatus) {
-                                              ref.child("LED").set(1);
-                                            } else {
-                                              ref.child("LED").set(0);
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                )),
+
                             SizedBox(height: 50),
                             ElevatedButton(
                               onPressed: () {

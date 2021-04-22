@@ -68,6 +68,7 @@ class _UserState extends State<User> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CircleAvatar(
+                            backgroundColor: Colors.black12,
                             radius: 50.0,
                             child: widget.guest
                                 ? Icon(
@@ -94,8 +95,10 @@ class _UserState extends State<User> {
                     children: [
                       FlutterSwitch(
                         value: isDark,
-                        activeToggleColor: Colors.black,
-                        inactiveToggleColor: Colors.teal,
+                        activeColor: Colors.black,
+                        inactiveColor: Colors.black12,
+                        activeToggleColor: Colors.black54,
+                        inactiveToggleColor: Colors.white,
                         // activeSwitchBorder: Border.all(
                         //   color: Color(0xFF00D2B8),
                         //   width: 2.0,
