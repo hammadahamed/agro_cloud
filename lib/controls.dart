@@ -67,13 +67,15 @@ class _ControlsState extends State<Controls> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: Container(
+        height: Get.height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: Get.height / 7,
+              height: Get.height * 0.01,
             ),
+            // Spacer(),
             Container(
               width: Get.width / 1.5,
               child: Column(
@@ -81,7 +83,7 @@ class _ControlsState extends State<Controls> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Control center,",
+                    "Control center",
                     style: TextStyle(
                         fontSize: Get.width * .1,
                         color: MyColors.primaryColor,
@@ -91,8 +93,10 @@ class _ControlsState extends State<Controls> {
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Text(
                       "\n- Kindly check for once, if expected perpherals are connetced to the appropriate switches",
+                      textAlign: TextAlign.justify,
                       style: TextStyle(
                         color: Colors.grey,
+                        fontSize: Get.width * .035,
                       ),
                     ),
                   ),
@@ -100,18 +104,20 @@ class _ControlsState extends State<Controls> {
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Text(
                       "\n- PIN represent the pin number in the Micro-controller, to the wich that particular switch is associated",
+                      textAlign: TextAlign.justify,
                       style: TextStyle(
                         color: Colors.grey,
+                        fontSize: Get.width * .035,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 50,
-            ),
-
+            // SizedBox(
+            //   height: 50,
+            // ),
+            Spacer(),
             // ROW 1
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -212,10 +218,10 @@ class _ControlsState extends State<Controls> {
                 ),
               ],
             ),
-
-            SizedBox(
-              height: 50,
-            ),
+            Spacer(),
+            // SizedBox(
+            //   height: 50,
+            // ),
 
             // ROW 2
             Row(
@@ -317,7 +323,8 @@ class _ControlsState extends State<Controls> {
                 ),
               ],
             ),
-            SizedBox(height: Get.height * .2)
+            Spacer(),
+            // SizedBox(height: Get.height * .2)
           ],
         ),
       ),

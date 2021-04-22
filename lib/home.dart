@@ -147,18 +147,22 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                           width: Get.width / 3,
                           child: Text(
                             widget.guest
-                                ? " Welcome \n Guest,\n"
+                                ? " Welcome \nGuest,\n"
                                 : " Welcome" + widget.detailsUser.toString(),
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: Get.width * .08,
+                                fontSize: Get.width * .075,
                                 fontFamily: "NunitoSans-regular"),
                           ),
                         ),
                       ),
                     ),
                     // NAVIGATIONS
-                    sideTile(title: "Overview", function: () {}),
+                    sideTile(
+                        title: "Overview",
+                        function: () {
+                          Navigator.pop(context);
+                        }),
                     sideTile(
                         title: "Analytics",
                         function: () {
@@ -168,26 +172,32 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                         title: "Controls",
                         function: () {
                           // print("==========");
+                          Navigator.pop(context);
                           Get.to(Controls());
+                        }),
+
+                    sideTile(
+                        title: "Humidity log",
+                        function: () {
+                          Navigator.pop(context);
+                          Get.to(HumidityLog());
                         }),
                     sideTile(
                         title: "Temperature log",
                         function: () {
+                          Navigator.pop(context);
                           Get.to(TemperatureLog());
-                        }),
-                    sideTile(
-                        title: "Humidity log",
-                        function: () {
-                          Get.to(HumidityLog());
                         }),
                     sideTile(
                         title: "Soil Moisture log",
                         function: () {
+                          Navigator.pop(context);
                           Get.to(SoilMoistureLog());
                         }),
                     sideTile(
                         title: "Export",
                         function: () {
+                          Navigator.pop(context);
                           Get.to(DatasTable());
                         }),
                   ],
@@ -454,7 +464,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                               "HUMIDITY",
                                               style: TextStyle(
                                                   fontFamily: "NunitoSans-bold",
-                                                  fontSize: Get.width * .036),
+                                                  fontSize: Get.width * .033),
                                             ),
                                           ),
                                         ],
@@ -464,8 +474,10 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                           snap.data.snapshot
                                               .value["DHT11Humidity"],
                                           style: TextStyle(
-                                              fontFamily: "NunitoSans-light",
-                                              fontSize: Get.width * .075),
+                                              // fontFamily: "NunitoSans-semibold",
+                                              fontSize: Get.width * .07,
+                                              fontWeight: FontWeight.w500,
+                                              color: MyColors.primaryColor),
                                         ),
                                       ),
                                       IconButton(
@@ -502,22 +514,23 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                                 content: Text(
                                                   "TEMPERATURE",
                                                   style: TextStyle(
-                                                      fontFamily:
-                                                          "NunitoSans-bold",
-                                                      fontSize:
-                                                          Get.width * .036),
+                                                    fontFamily:
+                                                        "NunitoSans-bold",
+                                                    fontSize: Get.width * .033,
+                                                  ),
                                                 ),
                                               ),
                                             ],
                                           ),
                                           oneThirdContainer(
                                             content: Text(
-                                                snap.data.snapshot
-                                                    .value["DHT11Temperature"],
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "NunitoSans-light",
-                                                    fontSize: Get.width * .07)),
+                                              snap.data.snapshot
+                                                  .value["DHT11Temperature"],
+                                              style: TextStyle(
+                                                  fontSize: Get.width * .07,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: MyColors.primaryColor),
+                                            ),
                                           ),
                                           IconButton(
                                             icon: Icon(Icons.chevron_right),
@@ -558,7 +571,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                                       fontFamily:
                                                           "NunitoSans-bold",
                                                       fontSize:
-                                                          Get.width * .036),
+                                                          Get.width * .033),
                                                 ),
                                               ),
                                             ],
@@ -572,8 +585,9 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                               child: Text(
                                                 "30%",
                                                 style: TextStyle(
-                                                    fontFamily:
-                                                        "NunitoSans-light",
+                                                    fontWeight: FontWeight.w500,
+                                                    color:
+                                                        MyColors.primaryColor,
                                                     fontSize: Get.width * .075),
                                               ),
                                             ),

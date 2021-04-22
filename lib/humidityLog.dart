@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:agro_cloud/utils.Dart';
 
 class HumidityLog extends StatefulWidget {
   @override
@@ -120,52 +121,55 @@ class _HumidityLogState extends State<HumidityLog>
           width: Get.width,
           child: Column(
             children: [
-              Container(
-                height: Get.height * .1,
-                width: Get.width,
-                child: Column(
-                  children: [
-                    isLiveState
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 9.0),
-                            child: FadeTransition(
-                              opacity: CurvedAnimation(
-                                  parent: AnimationController(
-                                    duration: const Duration(milliseconds: 750),
-                                    vsync: this,
-                                  )..repeat(reverse: true),
-                                  curve: Curves.easeIn),
-                              child: Row(
-                                children: [
-                                  Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 5.0),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.green,
-                                      maxRadius: 5,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Live",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 9.0),
+              SizedBox(
+                height: 10,
+              ),
+              // First HALF
+              Row(
+                children: [
+                  Hero(
+                    tag: "HumIcon",
+                    child: Image(
+                      height: 30,
+                      image: AssetImage(
+                        'assets/photo/humidity.png',
+                      ),
+                    ),
+                  ),
+                  Text("Humidity"),
+                  Spacer(),
+                  Container(
+                    width: Get.width / 3,
+                    child: isLiveState
+                        ? FadeTransition(
+                            opacity: CurvedAnimation(
+                                parent: AnimationController(
+                                  duration: const Duration(milliseconds: 750),
+                                  vsync: this,
+                                )..repeat(reverse: true),
+                                curve: Curves.easeIn),
                             child: Row(
                               children: [
                                 Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.red,
-                                    maxRadius: 5,
-                                  ),
+                                CircleAvatar(
+                                  backgroundColor: Colors.green,
+                                  maxRadius: 5,
+                                ),
+                                Text(
+                                  "Live",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          )
+                        : Container(
+                            child: Row(
+                              children: [
+                                Spacer(),
+                                CircleAvatar(
+                                  backgroundColor: Colors.red,
+                                  maxRadius: 5,
                                 ),
                                 Text(
                                   "Disconnected",
@@ -177,53 +181,73 @@ class _HumidityLogState extends State<HumidityLog>
                               ],
                             ),
                           ),
-                    Center(child: Text("HUMIDITY")),
-                    Hero(
-                      tag: "HumIcon",
-                      child: Image(
-                        height: 30,
-                        image: AssetImage(
-                          'assets/photo/humidity.png',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  )
+                ],
               ),
-
               // SECOND HALF
               Container(
+                margin: EdgeInsets.only(top: 10),
+                color: MyColors.primaryColor,
                 height: Get.height * .3,
               ),
               // THIRD HALF
               Container(
-                height: Get.height * .5,
+                height: Get.height * .45,
                 child: SingleChildScrollView(
-                  child: isLoad
-                      ? SpinKitDoubleBounce(
-                          color: Colors.black,
-                          size: 50.0,
-                        )
-                      : DataTable(columns: const <DataColumn>[
-                          DataColumn(
-                            label: Text(
-                              'Date',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
+                  child: DataTable(
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Text(
+                            'Date',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          DataColumn(
-                            label: Text(
-                              'Time',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Time',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          DataColumn(
-                            label: Text(
-                              'Humidity',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Humidity',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                        ], rows: allRow),
+                        ),
+                      ],
+                      dividerThickness: isLoad ? 0 : 1,
+                      rows: !isLoad
+                          ? allRow
+                          : [
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(
+                                    Text(""),
+                                  ),
+                                  DataCell(Text("")),
+                                  DataCell(Text("")),
+                                ],
+                              ),
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(Text("")),
+                                  DataCell(Text("")),
+                                  DataCell(Text("")),
+                                ],
+                              ),
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(Text("")),
+                                  DataCell(Center(
+                                    child: SpinKitDoubleBounce(
+                                      color: MyColors.primaryColor,
+                                      size: 50.0,
+                                    ),
+                                  )),
+                                  DataCell(Text("")),
+                                ],
+                              ),
+                            ]),
                 ),
               ),
             ],
