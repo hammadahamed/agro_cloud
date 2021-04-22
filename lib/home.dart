@@ -285,25 +285,25 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                       CrossAxisAlignment.stretch,
                                   children: <Widget>[
                                     const SizedBox(
-                                      height: 37,
+                                      height: 12,
                                     ),
                                     const Text(
                                       'Humidity , Moisture , Temperature',
                                       style: TextStyle(
                                         fontFamily: "NunitoSans-semibold",
                                         color: Color(0xff827daa),
-                                        fontSize: 16,
+                                        fontSize: 12,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
-                                    const SizedBox(
-                                      height: 4,
-                                    ),
+                                    // const SizedBox(
+                                    //   height: 1,
+                                    // ),
                                     Text(
                                       'Overview',
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: Get.width * .15,
+                                          fontSize: Get.width * .1,
                                           fontFamily: "NunitoSans-regular",
                                           fontWeight: FontWeight.bold,
                                           letterSpacing: 2),
@@ -357,7 +357,9 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                   " CONNECTION  STATUS",
                                   style: TextStyle(
                                       fontSize: Get.width * .04,
-                                      color:Get.isDarkMode?Colors.blueGrey[200]:Colors.black54,
+                                      color: Get.isDarkMode
+                                          ? Colors.blueGrey[200]
+                                          : Colors.black54,
                                       fontFamily: "NunitoSans-semibold"),
                                 ),
                                 isLiveState
@@ -586,8 +588,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                                 "30%",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w500,
-                                                    color:
-                                                        Colors.yellow[700],
+                                                    color: Colors.yellow[700],
                                                     fontSize: Get.width * .075),
                                               ),
                                             ),
