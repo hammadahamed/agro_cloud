@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:agro_cloud/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -22,7 +21,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   GoogleSignIn googleSignIn = GoogleSignIn();
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
-  bool isDark = false;
+  bool isDark = Get.isDarkMode;
 
   isLive() {
     final re = fb.reference();
@@ -55,7 +54,6 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     super.initState();
     Timer.periodic(Duration(seconds: 5), (timer) {
       isLive();
-      isDark = false;
     });
   }
 

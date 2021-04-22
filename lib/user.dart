@@ -17,7 +17,8 @@ class User extends StatefulWidget {
 
 class _UserState extends State<User> {
   GoogleSignIn googleSignIn = GoogleSignIn();
-  bool isDark = false;
+  bool isDark = Get.isDarkMode;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -117,6 +118,7 @@ class _UserState extends State<User> {
                         onToggle: (val) {
                           setState(() {
                             isDark = val;
+                            print(isDark);
                             Get.isDarkMode
                                 ? Get.changeTheme(ThemeData.light())
                                 : Get.changeTheme(ThemeData.dark());
