@@ -9,7 +9,8 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
-import 'datasTable.dart';
+import 'package:agro_cloud/utils.Dart';
+// import 'datasTable.dart';
 import 'package:agro_cloud/controls.dart';
 
 import 'humidityLog.dart';
@@ -67,8 +68,16 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   Widget oneThirdContainer({Widget content}) {
     return Container(
-      width: MediaQuery.of(context).size.width / 4,
+      width: Get.width / 4,
       child: content,
+    );
+  }
+
+  cardContainer({child}) {
+    return Container(
+      height: (Get.height / 2) / 4,
+      width: Get.width,
+      child: child,
     );
   }
 
@@ -79,14 +88,6 @@ class _Home extends State<Home> with TickerProviderStateMixin {
       margin: EdgeInsets.only(top: 10),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(15)),
-        // gradient: LinearGradient(
-        //   colors: [
-        //     Color(0xff2c274c),
-        //     Color(0xff46426c),
-        //   ],
-        //   begin: Alignment.centerLeft,
-        //   end: Alignment.centerRight,
-        // ),
         color: Color(0xff46426c),
       ),
       child: Column(
@@ -116,7 +117,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
           // DRAWER
           drawer: Drawer(
             child: Container(
-              height: MediaQuery.of(context).size.height,
+              height: Get.height,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -132,30 +133,26 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                 'assets/photo/black_abstract.jpg',
                               ),
                               fit: BoxFit.cover)),
-                      height: MediaQuery.of(context).size.height / 4,
+                      height: Get.height / 4,
                       width: double.maxFinite,
                       child: Align(
                         alignment: Alignment.bottomLeft,
                         child: Container(
-                          width: MediaQuery.of(context).size.width / 3,
+                          width: Get.width / 3,
                           child: Text(
                             widget.guest
                                 ? " Welcome \n Guest,\n"
                                 : " Welcome" + widget.detailsUser.toString(),
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 30,
+                                fontSize: Get.width * .08,
                                 fontFamily: "NunitoSans-regular"),
                           ),
                         ),
                       ),
                     ),
                     // NAVIGATIONS
-                    sideTile(
-                        title: "Overview",
-                        function: () {
-                          print("==========");
-                        }),
+                    sideTile(title: "Overview", function: () {}),
                     sideTile(
                         title: "Analytics",
                         function: () {
@@ -195,13 +192,13 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
           // APPBAR
           appBar: AppBar(
-            iconTheme: IconThemeData(color: Colors.blueGrey),
-            foregroundColor: Colors.blueGrey,
-            backgroundColor: Colors.white,
+            iconTheme: IconThemeData(color: MyColors.primaryColor),
+            backgroundColor: Get.isDarkMode ? null : Colors.white,
             title: Text(
               "Agro Cloud",
               style: TextStyle(
-                  fontFamily: "NunitoSans-semibold", color: Colors.blueGrey),
+                  fontFamily: "NunitoSans-semibold",
+                  color: Get.isDarkMode ? Colors.white : MyColors.primaryColor),
             ),
             actions: <Widget>[
               InkWell(
@@ -221,7 +218,8 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                   child: Hero(
                     tag: "avatar",
                     child: CircleAvatar(
-                      backgroundColor: widget.guest ? Colors.blueGrey : null,
+                      backgroundColor:
+                          widget.guest ? MyColors.primaryColor : null,
                       child: Icon(
                         Icons.person,
                         color: Colors.white,
@@ -239,358 +237,363 @@ class _Home extends State<Home> with TickerProviderStateMixin {
           body: StreamBuilder(
             stream: ref.onValue,
             builder: (context, snap) {
+              Orientation mode = MediaQuery.of(context).orientation;
               return snap.data == null
                   ? Center(child: CircularProgressIndicator())
                   : SingleChildScrollView(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            // CHART
-                            Container(
-                              height: MediaQuery.of(context).size.height / 3,
-                              // margin:
-                              //     EdgeInsets.only(left: 10, right: 10, top: 10),
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(3)),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xff2c274c),
-                                    Color(0xff46426c),
-                                  ],
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                ),
-                              ),
-                              child: Stack(
-                                children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: <Widget>[
-                                      const SizedBox(
-                                        height: 37,
-                                      ),
-                                      const Text(
-                                        'Humidity , Moisture , Temperature',
-                                        style: TextStyle(
-                                          fontFamily: "NunitoSans-semibold",
-                                          color: Color(0xff827daa),
-                                          fontSize: 16,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      const Text(
-                                        'Overview',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 32,
-                                            fontFamily: "NunitoSans-regular",
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: 2),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(
-                                        height: 37,
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 16.0, left: 6.0),
-                                          child: LineChart(
-                                            isShowingMainData
-                                                ? sampleData1()
-                                                : sampleData2(),
-                                            swapAnimationDuration:
-                                                const Duration(
-                                                    milliseconds: 250),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.refresh,
-                                      color: Colors.white.withOpacity(
-                                          isShowingMainData ? 1.0 : 0.5),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        isShowingMainData = !isShowingMainData;
-                                      });
-                                    },
-                                  )
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          // CHART
+                          Container(
+                            height: mode == Orientation.landscape
+                                ? Get.height / 1
+                                : Get.height / 3,
+                            // margin:
+                            //     EdgeInsets.only(left: 10, right: 10, top: 10),
+                            decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(3)),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xff2c274c),
+                                  Color(0xff46426c),
                                 ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
                               ),
                             ),
-                            isLiveState
-                                ? chipContainer(
-                                    child: FadeTransition(
-                                      opacity: CurvedAnimation(
-                                          parent: AnimationController(
-                                            duration: const Duration(
-                                                milliseconds: 750),
-                                            vsync: this,
-                                          )..repeat(reverse: true),
-                                          curve: Curves.easeIn),
-                                      child: Row(
-                                        children: [
-                                          Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 5.0),
-                                            child: CircleAvatar(
-                                              backgroundColor: Colors.green,
-                                              maxRadius: 5,
-                                            ),
-                                          ),
-                                          Text(
-                                            "Live",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Spacer(),
-                                        ],
+                            child: Stack(
+                              children: <Widget>[
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: <Widget>[
+                                    const SizedBox(
+                                      height: 37,
+                                    ),
+                                    const Text(
+                                      'Humidity , Moisture , Temperature',
+                                      style: TextStyle(
+                                        fontFamily: "NunitoSans-semibold",
+                                        color: Color(0xff827daa),
+                                        fontSize: 16,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      'Overview',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: Get.width * .15,
+                                          fontFamily: "NunitoSans-regular",
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 2),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(
+                                      height: 37,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 16.0, left: 6.0),
+                                        child: LineChart(
+                                          isShowingMainData
+                                              ? sampleData1()
+                                              : sampleData2(),
+                                          swapAnimationDuration:
+                                              const Duration(milliseconds: 250),
+                                        ),
                                       ),
                                     ),
-                                  )
-                                : chipContainer(
-                                    child: Row(
-                                      children: [
-                                        Spacer(),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 5.0),
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.red,
-                                            maxRadius: 5,
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.refresh,
+                                    color: Colors.white.withOpacity(
+                                        isShowingMainData ? 1.0 : 0.5),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isShowingMainData = !isShowingMainData;
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "MODULE  STATUS",
+                                  style: TextStyle(
+                                      fontSize: Get.width * .04,
+                                      color: Colors.black54,
+                                      fontFamily: "NunitoSans-semibold"),
+                                ),
+                                isLiveState
+                                    ? chipContainer(
+                                        child: FadeTransition(
+                                          opacity: CurvedAnimation(
+                                              parent: AnimationController(
+                                                duration: const Duration(
+                                                    milliseconds: 750),
+                                                vsync: this,
+                                              )..repeat(reverse: true),
+                                              curve: Curves.easeIn),
+                                          child: Row(
+                                            children: [
+                                              Spacer(),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 5.0),
+                                                child: CircleAvatar(
+                                                  backgroundColor: Colors.green,
+                                                  maxRadius: 5,
+                                                ),
+                                              ),
+                                              Text(
+                                                "Live",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Spacer(),
+                                            ],
                                           ),
                                         ),
-                                        Text(
-                                          "Disconnected",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: "NunitoSans-regular",
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Spacer(),
-                                      ],
-                                    ),
-                                  ),
-                            // ListTile(
-                            //   title: Text("Time Stamp"),
-                            //   trailing: Text(snap.data.snapshot.value["TimeStamp"]
-                            //       .toString()),
-                            // ),
-                            SizedBox(height: 20),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              height: MediaQuery.of(context).size.height / 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                      height:
-                                          (MediaQuery.of(context).size.height /
-                                                  2) /
-                                              3.3,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Card(
-                                          child: Center(
+                                      )
+                                    : chipContainer(
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
                                           children: [
-                                            Row(
-                                              children: [
-                                                Hero(
-                                                  tag: "HumIcon",
-                                                  child: Image(
-                                                    height: 30,
-                                                    image: AssetImage(
-                                                      'assets/photo/humidity.png',
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                oneThirdContainer(
-                                                  content: Text(
-                                                    "HUMIDITY",
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            "NunitoSans-bold",
-                                                        fontSize: 15),
-                                                  ),
-                                                ),
-                                              ],
+                                            Spacer(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 5.0),
+                                              child: CircleAvatar(
+                                                backgroundColor: Colors.red,
+                                                maxRadius: 5,
+                                              ),
                                             ),
-                                            oneThirdContainer(
-                                              content: Text(
+                                            Text(
+                                              "Disconnected",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: Get.width * .03,
+                                                  fontFamily:
+                                                      "NunitoSans-regular",
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Spacer(),
+                                          ],
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                          // ListTile(
+                          //   title: Text("Time Stamp"),
+                          //   trailing: Text(snap.data.snapshot.value["TimeStamp"]
+                          //       .toString()),
+                          // ),
+                          SizedBox(height: 20),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            height: Get.height / 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                cardContainer(
+                                    child: Card(
+                                        child: Center(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Hero(
+                                            tag: "HumIcon",
+                                            child: Image(
+                                              height: 30,
+                                              image: AssetImage(
+                                                'assets/photo/humidity.png',
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          oneThirdContainer(
+                                            content: Text(
+                                              "HUMIDITY",
+                                              style: TextStyle(
+                                                  fontFamily: "NunitoSans-bold",
+                                                  fontSize: Get.width * .036),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      oneThirdContainer(
+                                        content: Text(
+                                          snap.data.snapshot
+                                              .value["DHT11Humidity"],
+                                          style: TextStyle(
+                                              fontFamily: "NunitoSans-light",
+                                              fontSize: Get.width * .075),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.chevron_right),
+                                        onPressed: () {
+                                          Get.to(HumidityLog());
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ))),
+                                cardContainer(
+                                  child: Card(
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Hero(
+                                                tag: "ThermoIcon",
+                                                child: SvgPicture.asset(
+                                                  'assets/icons/thermometer.svg',
+                                                  height: 30,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              oneThirdContainer(
+                                                content: Text(
+                                                  "TEMPERATURE",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "NunitoSans-bold",
+                                                      fontSize:
+                                                          Get.width * .036),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          oneThirdContainer(
+                                            content: Text(
                                                 snap.data.snapshot
-                                                    .value["DHT11Humidity"],
+                                                    .value["DHT11Temperature"],
                                                 style: TextStyle(
                                                     fontFamily:
                                                         "NunitoSans-light",
-                                                    fontSize: 28),
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.chevron_right),
-                                              onPressed: () {
-                                                Get.to(HumidityLog());
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ))),
-                                  Container(
-                                    height:
-                                        (MediaQuery.of(context).size.height /
-                                                2) /
-                                            3.3,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Card(
-                                      child: Center(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Hero(
-                                                  tag: "ThermoIcon",
-                                                  child: SvgPicture.asset(
-                                                    'assets/icons/thermometer.svg',
-                                                    height: 30,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                oneThirdContainer(
-                                                  content: Text(
-                                                    "TEMPERATURE",
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            "NunitoSans-bold",
-                                                        fontSize: 15),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            oneThirdContainer(
-                                              content: Text(
-                                                  snap.data.snapshot.value[
-                                                      "DHT11Temperature"],
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          "NunitoSans-light",
-                                                      fontSize: 28)),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.chevron_right),
-                                              onPressed: () {
-                                                Get.to(TemperatureLog());
-                                              },
-                                            )
-                                          ],
-                                        ),
+                                                    fontSize: Get.width * .07)),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.chevron_right),
+                                            onPressed: () {
+                                              Get.to(TemperatureLog());
+                                            },
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    height:
-                                        (MediaQuery.of(context).size.height /
-                                                2) /
-                                            3.3,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Card(
-                                      child: Center(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Hero(
-                                                  tag: "SoilMoisIcon",
-                                                  child: Image.asset(
-                                                    'assets/photo/soilmoisture.png',
-                                                    height: 45,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                oneThirdContainer(
-                                                  content: Text(
-                                                    "SOIL MOISTURE",
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            "NunitoSans-bold",
-                                                        fontSize: 15),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            oneThirdContainer(
-                                              content: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    3,
-                                                child: Text(
-                                                  "30%",
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          "NunitoSans-light",
-                                                      fontSize: 28),
+                                ),
+                                cardContainer(
+                                  child: Card(
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Hero(
+                                                tag: "SoilMoisIcon",
+                                                child: Image.asset(
+                                                  'assets/photo/soilmoisture.png',
+                                                  height: 45,
                                                 ),
                                               ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              oneThirdContainer(
+                                                content: Text(
+                                                  "SOIL MOISTURE",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "NunitoSans-bold",
+                                                      fontSize:
+                                                          Get.width * .036),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          oneThirdContainer(
+                                            content: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child: Text(
+                                                "30%",
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        "NunitoSans-light",
+                                                    fontSize: Get.width * .075),
+                                              ),
                                             ),
-                                            IconButton(
-                                              icon: Icon(Icons.chevron_right),
-                                              onPressed: () {
-                                                Get.to(SoilMoistureLog());
-                                              },
-                                            )
-                                          ],
-                                        ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.chevron_right),
+                                            onPressed: () {
+                                              Get.to(SoilMoistureLog());
+                                            },
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+                          ),
 
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     Navigator.push(
-                            //         context,
-                            //         new MaterialPageRoute(
-                            //             builder: (context) => DatasTable()));
-                            //   },
-                            //   child: Text("All Data"),
-                            // ),
-                          ],
-                        ),
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     Navigator.push(
+                          //         context,
+                          //         new MaterialPageRoute(
+                          //             builder: (context) => DatasTable()));
+                          //   },
+                          //   child: Text("All Data"),
+                          // ),
+                        ],
                       ),
                     );
             },

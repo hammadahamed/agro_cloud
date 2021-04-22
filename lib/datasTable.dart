@@ -77,7 +77,7 @@ class _DatasTableState extends State<DatasTable> {
   @override
   Widget build(BuildContext context) {
     // SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
-    final ref = fb.reference();
+    // final ref = fb.reference();
     return Scaffold(
         appBar: AppBar(
           title: Text("All Data Log"),

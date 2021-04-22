@@ -1,8 +1,10 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
+import 'package:agro_cloud/utils.Dart';
 
 class Controls extends StatefulWidget {
   Controls({Key key}) : super(key: key);
@@ -52,13 +54,17 @@ class _ControlsState extends State<Controls> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.blueGrey),
+        iconTheme: IconThemeData(
+          color: MyColors.primaryColor,
+        ),
         foregroundColor: Colors.blueGrey,
         backgroundColor: Colors.white,
         title: Text(
           "Controls",
           style: TextStyle(
-              fontFamily: "NunitoSans-semibold", color: Colors.blueGrey),
+            fontFamily: "NunitoSans-semibold",
+            color: MyColors.primaryColor,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -66,12 +72,41 @@ class _ControlsState extends State<Controls> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height / 6,
+              height: Get.height / 7,
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 1.7,
-              child: Text(
-                  "Controls center,\n \nKindly check for once, if expected perpherals are connetced to the appropriate switches"),
+              width: Get.width / 1.5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Control center,",
+                    style: TextStyle(
+                        fontSize: Get.width * .1,
+                        color: MyColors.primaryColor,
+                        fontFamily: "NunitoSans-semibold"),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Text(
+                      "\n- Kindly check for once, if expected perpherals are connetced to the appropriate switches",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Text(
+                      "\n- PIN represent the pin number in the Micro-controller, to the wich that particular switch is associated",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 50,
@@ -97,7 +132,7 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Switch 1",
+                            "Switch 1\nPIN : 6",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -144,7 +179,7 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Switch 2",
+                            "Switch 2\nPIN : 7",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -202,7 +237,7 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Switch 3",
+                            "Switch 3\nPIN : 8",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -249,7 +284,7 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Switch 4",
+                            "Switch 4\nPIN : 9",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -282,6 +317,7 @@ class _ControlsState extends State<Controls> {
                 ),
               ],
             ),
+            SizedBox(height: Get.height * .2)
           ],
         ),
       ),

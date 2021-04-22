@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:agro_cloud/home.dart';
 import 'login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:simple_animations/simple_animations.dart';
+// import 'package:simple_animations/simple_animations.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -11,9 +11,6 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-
-
-
   bool signIn;
   GoogleSignInAccount userObj;
   GoogleSignIn googleSignIn = GoogleSignIn();
