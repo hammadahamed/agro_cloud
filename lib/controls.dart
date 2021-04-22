@@ -16,7 +16,10 @@ class _ControlsState extends State<Controls> {
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
   bool isDark = false;
-  bool ledStatus = false;
+  bool ledStatus1 = false;
+  bool ledStatus2 = false;
+  bool ledStatus3 = false;
+  bool ledStatus4 = false;
   isLive() {
     final re = fb.reference();
 
@@ -98,11 +101,11 @@ class _ControlsState extends State<Controls> {
                           showOnOff: true,
                           activeTextColor: Colors.black,
                           inactiveTextColor: Colors.blue[50],
-                          value: ledStatus,
+                          value: ledStatus1,
                           onToggle: (value) {
                             setState(() {
-                              ledStatus = value;
-                              if (ledStatus) {
+                              ledStatus1 = value;
+                              if (ledStatus1) {
                                 ref.child("LED").set(1);
                               } else {
                                 ref.child("LED").set(0);
@@ -145,11 +148,11 @@ class _ControlsState extends State<Controls> {
                           showOnOff: true,
                           activeTextColor: Colors.black,
                           inactiveTextColor: Colors.blue[50],
-                          value: ledStatus,
+                          value: ledStatus2,
                           onToggle: (value) {
                             setState(() {
-                              ledStatus = value;
-                              if (ledStatus) {
+                              ledStatus2 = value;
+                              if (ledStatus2) {
                                 ref.child("LED").set(1);
                               } else {
                                 ref.child("LED").set(0);
@@ -203,11 +206,11 @@ class _ControlsState extends State<Controls> {
                           showOnOff: true,
                           activeTextColor: Colors.black,
                           inactiveTextColor: Colors.blue[50],
-                          value: ledStatus,
+                          value: ledStatus3,
                           onToggle: (value) {
                             setState(() {
-                              ledStatus = value;
-                              if (ledStatus) {
+                              ledStatus3 = value;
+                              if (ledStatus3) {
                                 ref.child("LED").set(1);
                               } else {
                                 ref.child("LED").set(0);
@@ -250,11 +253,11 @@ class _ControlsState extends State<Controls> {
                           showOnOff: true,
                           activeTextColor: Colors.black,
                           inactiveTextColor: Colors.blue[50],
-                          value: ledStatus,
+                          value: ledStatus4,
                           onToggle: (value) {
                             setState(() {
-                              ledStatus = value;
-                              if (ledStatus) {
+                              ledStatus4 = value;
+                              if (ledStatus4) {
                                 ref.child("LED").set(1);
                               } else {
                                 ref.child("LED").set(0);
