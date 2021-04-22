@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         //'/splash': (_) => Splash(),
         '/login': (_) => Login(),
         '/home': (_) => Home(),
+        
       },
     );
   }

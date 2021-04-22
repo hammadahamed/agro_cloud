@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:agro_cloud/soilMoisture.dart';
+import 'package:agro_cloud/temperatureLog.dart';
 import 'package:agro_cloud/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,6 +10,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'datasTable.dart';
 import 'package:agro_cloud/controls.dart';
+
+import 'humidityLog.dart';
 
 class Home extends StatefulWidget {
   final GoogleSignInAccount detailsUser;
@@ -137,12 +141,17 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                     sideTile(
                         title: "Temperature log",
                         function: () {
-                          print("==========");
+                          Get.to(TemperatureLog());
                         }),
                     sideTile(
                         title: "Humidity log",
                         function: () {
-                          print("==========");
+                          Get.to(HumidityLog());
+                        }),
+                    sideTile(
+                        title: "Soil Moisture log",
+                        function: () {
+                          Get.to(SoilMoistureLog());
                         }),
                     sideTile(
                         title: "Export",
@@ -323,7 +332,9 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                             ),
                                             IconButton(
                                               icon: Icon(Icons.chevron_right),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Get.to(HumidityLog());
+                                              },
                                             )
                                           ],
                                         ),
@@ -373,7 +384,9 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                             ),
                                             IconButton(
                                               icon: Icon(Icons.chevron_right),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Get.to(TemperatureLog());
+                                              },
                                             )
                                           ],
                                         ),
@@ -431,7 +444,9 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                             ),
                                             IconButton(
                                               icon: Icon(Icons.chevron_right),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Get.to(SoilMoistureLog());
+                                              },
                                             )
                                           ],
                                         ),
