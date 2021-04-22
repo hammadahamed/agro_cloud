@@ -72,10 +72,10 @@ class _ControlsState extends State<Controls> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: Get.height * 0.01,
-            ),
-            // Spacer(),
+            // SizedBox(
+            //   height: Get.height * 0.01,
+            // ),
+            Spacer(),
             Container(
               width: Get.width / 1.5,
               child: Column(
@@ -114,10 +114,9 @@ class _ControlsState extends State<Controls> {
                 ],
               ),
             ),
-            // SizedBox(
-            //   height: 50,
-            // ),
-            Spacer(),
+            SizedBox(
+              height: 50,
+            ),
             // ROW 1
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -218,10 +217,9 @@ class _ControlsState extends State<Controls> {
                 ),
               ],
             ),
-            Spacer(),
-            // SizedBox(
-            //   height: 50,
-            // ),
+            SizedBox(
+              height: 30,
+            ),
 
             // ROW 2
             Row(
