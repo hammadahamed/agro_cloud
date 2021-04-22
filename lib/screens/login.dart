@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sign_button/sign_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'home.dart';
+import '../home.dart';
 
 class Login extends StatefulWidget {
   @override

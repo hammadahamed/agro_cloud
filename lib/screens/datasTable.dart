@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'exportCSV.dart';
+import '../components/exportCSV.dart';
 
 class DatasTable extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:agro_cloud/soilMoisture.dart';
-import 'package:agro_cloud/temperatureLog.dart';
-import 'package:agro_cloud/user.dart';
+import 'package:agro_cloud/screens/soilMoisture.dart';
+import 'package:agro_cloud/screens/temperatureLog.dart';
+import 'package:agro_cloud/screens/user.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,10 +10,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
-import 'datasTable.dart';
-import 'package:agro_cloud/controls.dart';
+import 'screens/datasTable.dart';
+import 'package:agro_cloud/screens/controls.dart';
 
-import 'humidityLog.dart';
+import 'screens/humidityLog.dart';
 
 class Home extends StatefulWidget {
   final GoogleSignInAccount detailsUser;
