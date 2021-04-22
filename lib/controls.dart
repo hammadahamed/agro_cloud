@@ -15,7 +15,6 @@ class _ControlsState extends State<Controls> {
   GoogleSignIn googleSignIn = GoogleSignIn();
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
-  bool isDark = false;
   bool ledStatus1 = false;
   bool ledStatus2 = false;
   bool ledStatus3 = false;
@@ -66,6 +65,18 @@ class _ControlsState extends State<Controls> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 6,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width / 1.7,
+              child: Text(
+                  "Controls center,\n \nKindly check for once, if expected perpherals are connetced to the appropriate switches"),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+
             // ROW 1
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -86,7 +97,7 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Control Switch",
+                            "Switch 1",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -133,7 +144,7 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Control Switch",
+                            "Switch 2",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -191,7 +202,7 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Control Switch",
+                            "Switch 3",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -238,7 +249,7 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Control Switch",
+                            "Switch 4",
                             textAlign: TextAlign.center,
                           ),
                         ),
