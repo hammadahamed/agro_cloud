@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HumidityLog extends StatefulWidget {
@@ -114,96 +115,116 @@ class _HumidityLogState extends State<HumidityLog>
                 })
           ],
         ),
-        body: SingleChildScrollView(
+        body: Container(
+          height: Get.height,
+          width: Get.width,
           child: Column(
             children: [
-              isLiveState
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 9.0),
-                      child: FadeTransition(
-                        opacity: CurvedAnimation(
-                            parent: AnimationController(
-                              duration: const Duration(milliseconds: 750),
-                              vsync: this,
-                            )..repeat(reverse: true),
-                            curve: Curves.easeIn),
-                        child: Row(
-                          children: [
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 5.0),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.green,
-                                maxRadius: 5,
+              Container(
+                height: Get.height * .1,
+                width: Get.width,
+                child: Column(
+                  children: [
+                    isLiveState
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 9.0),
+                            child: FadeTransition(
+                              opacity: CurvedAnimation(
+                                  parent: AnimationController(
+                                    duration: const Duration(milliseconds: 750),
+                                    vsync: this,
+                                  )..repeat(reverse: true),
+                                  curve: Curves.easeIn),
+                              child: Row(
+                                children: [
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 5.0),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.green,
+                                      maxRadius: 5,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Live",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Spacer(),
+                                ],
                               ),
                             ),
-                            Text(
-                              "Live",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(top: 9.0),
+                            child: Row(
+                              children: [
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5.0),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.red,
+                                    maxRadius: 5,
+                                  ),
+                                ),
+                                Text(
+                                  "Disconnected",
+                                  style: TextStyle(
+                                      fontFamily: "NunitoSans-regular",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Spacer(),
+                              ],
                             ),
-                            Spacer(),
-                          ],
+                          ),
+                    Center(child: Text("HUMIDITY")),
+                    Hero(
+                      tag: "HumIcon",
+                      child: Image(
+                        height: 30,
+                        image: AssetImage(
+                          'assets/photo/humidity.png',
                         ),
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 9.0),
-                      child: Row(
-                        children: [
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5.0),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.red,
-                              maxRadius: 5,
-                            ),
-                          ),
-                          Text(
-                            "Disconnected",
-                            style: TextStyle(
-                                fontFamily: "NunitoSans-regular",
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Spacer(),
-                        ],
                       ),
                     ),
-              Center(child: Text("HUMIDITY")),
-              Hero(
-                tag: "HumIcon",
-                child: Image(
-                  height: 30,
-                  image: AssetImage(
-                    'assets/photo/humidity.png',
-                  ),
+                  ],
                 ),
               ),
-              SingleChildScrollView(
-                child: isLoad
-                    ? SpinKitDoubleBounce(
-                        color: Colors.black,
-                        size: 50.0,
-                      )
-                    : DataTable(columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            'Date',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+
+              // SECOND HALF
+              Container(
+                height: Get.height * .3,
+              ),
+              // THIRD HALF
+              Container(
+                height: Get.height * .5,
+                child: SingleChildScrollView(
+                  child: isLoad
+                      ? SpinKitDoubleBounce(
+                          color: Colors.black,
+                          size: 50.0,
+                        )
+                      : DataTable(columns: const <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'Date',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Time',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Time',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Humidity',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Humidity',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                      ], rows: allRow),
+                        ], rows: allRow),
+                ),
               ),
             ],
           ),
