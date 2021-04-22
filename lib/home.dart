@@ -357,7 +357,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                   " CONNECTION  STATUS",
                                   style: TextStyle(
                                       fontSize: Get.width * .04,
-                                      color: Colors.black54,
+                                      color:Get.isDarkMode?Colors.blueGrey[200]:Colors.black54,
                                       fontFamily: "NunitoSans-semibold"),
                                 ),
                                 isLiveState
@@ -477,7 +477,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                               // fontFamily: "NunitoSans-semibold",
                                               fontSize: Get.width * .07,
                                               fontWeight: FontWeight.w500,
-                                              color: MyColors.primaryColor),
+                                              color: Colors.cyan),
                                         ),
                                       ),
                                       IconButton(
@@ -529,7 +529,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                               style: TextStyle(
                                                   fontSize: Get.width * .07,
                                                   fontWeight: FontWeight.w500,
-                                                  color: MyColors.primaryColor),
+                                                  color: Colors.redAccent),
                                             ),
                                           ),
                                           IconButton(
@@ -587,7 +587,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     color:
-                                                        MyColors.primaryColor,
+                                                        Colors.yellow[700],
                                                     fontSize: Get.width * .075),
                                               ),
                                             ),

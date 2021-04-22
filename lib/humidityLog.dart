@@ -100,6 +100,14 @@ class _HumidityLogState extends State<HumidityLog>
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(color: MyColors.primaryColor),
+          title: Text(
+            "Humidity Logs",
+            style: TextStyle(
+                fontFamily: "NunitoSans-semibold",
+                color: Get.isDarkMode ? Colors.white : MyColors.primaryColor),
+          ),
+          backgroundColor: Get.isDarkMode ? null : Colors.white,
           actions: [
             IconButton(
                 icon: Icon(Icons.refresh),
