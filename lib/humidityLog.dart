@@ -135,6 +135,9 @@ class _HumidityLogState extends State<HumidityLog>
               // First HALF
               Row(
                 children: [
+                  SizedBox(
+                    width: 15,
+                  ),
                   Hero(
                     tag: "HumIcon",
                     child: Image(
