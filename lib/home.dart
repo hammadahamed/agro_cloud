@@ -10,7 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
-// import 'datasTable.dart';
+import 'datasTable.dart';
 import 'package:agro_cloud/controls.dart';
 
 import 'humidityLog.dart';
@@ -75,7 +75,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   cardContainer({child}) {
     return Container(
-      height: (Get.height / 2) / 4,
+      height: (Get.height * .3) / 3,
       width: Get.width,
       child: child,
     );
@@ -111,6 +111,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
+
+    Orientation mode = MediaQuery.of(context).orientation;
+    double firstPart =
+        mode == Orientation.landscape ? Get.height : Get.height * .4;
+    double secondPart =
+        mode == Orientation.landscape ? Get.height : Get.height * .3;
 
     return SafeArea(
       child: Scaffold(
@@ -182,7 +188,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                     sideTile(
                         title: "Export",
                         function: () {
-                          print("==========");
+                          Get.to(DatasTable());
                         }),
                   ],
                 ),
@@ -234,10 +240,11 @@ class _Home extends State<Home> with TickerProviderStateMixin {
               ),
             ],
           ),
+
+          //  ACTUAL BODY
           body: StreamBuilder(
             stream: ref.onValue,
             builder: (context, snap) {
-              Orientation mode = MediaQuery.of(context).orientation;
               return snap.data == null
                   ? Center(child: CircularProgressIndicator())
                   : SingleChildScrollView(
@@ -246,14 +253,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                         children: <Widget>[
                           // CHART
                           Container(
-                            height: mode == Orientation.landscape
-                                ? Get.height / 1
-                                : Get.height / 3,
+                            height: firstPart,
                             // margin:
                             //     EdgeInsets.only(left: 10, right: 10, top: 10),
                             decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(3)),
+                              // borderRadius:
+                              //     BorderRadius.all(Radius.circular(3)),
                               gradient: LinearGradient(
                                 colors: [
                                   Color(0xff2c274c),
@@ -331,6 +336,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                             ),
                           ),
 
+                          // MODULE CONNECTION STATUS
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Row(
@@ -338,7 +344,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "MODULE  STATUS",
+                                  " CONNECTION  STATUS",
                                   style: TextStyle(
                                       fontSize: Get.width * .04,
                                       color: Colors.black54,
@@ -411,9 +417,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                           //       .toString()),
                           // ),
                           SizedBox(height: 20),
+
+                          // TILES
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 10),
-                            height: Get.height / 2,
+                            height: secondPart,
+                            // color: MyColors.primaryColor,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [

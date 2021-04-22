@@ -110,25 +110,21 @@ class _DatasTableState extends State<DatasTable> {
                             DataColumn(
                               label: Text(
                                 'Date',
-                                style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Time',
-                                style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Temperature',
-                                style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Humidity',
-                                style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                           ], rows: allRow),
