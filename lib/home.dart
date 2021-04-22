@@ -65,75 +65,183 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     );
   }
 
+  Widget sideTile({String title, function}) {
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(fontFamily: "NunitoSans-regular"),
+      ),
+      onTap: function,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
 
-    return Scaffold(
-        drawer: Drawer(),
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.blueGrey),
-          foregroundColor: Colors.blueGrey,
-          backgroundColor: Colors.white,
-          title: Text(
-            "Agro Cloud",
-            style: TextStyle(
-                fontFamily: "NunitoSans-semibold", color: Colors.blueGrey),
-          ),
-          actions: <Widget>[
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                    builder: (context) => User(
-                      userdetails: widget.detailsUser,
-                      guest: widget.guest,
+    return SafeArea(
+      child: Scaffold(
+          // DRAWER
+          drawer: Drawer(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // USER BANNER
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          image: DecorationImage(
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.8),
+                                  BlendMode.dstATop),
+                              image: AssetImage(
+                                'assets/photo/black_abstract.jpg',
+                              ),
+                              fit: BoxFit.cover)),
+                      height: MediaQuery.of(context).size.height / 4,
+                      width: double.maxFinite,
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: Text(
+                            widget.guest
+                                ? " Welcome \n Guest,\n"
+                                : " Welcome" + widget.detailsUser.toString(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontFamily: "NunitoSans-regular"),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Hero(
-                  tag: "avatar",
-                  child: CircleAvatar(
-                    backgroundColor: widget.guest ? Colors.blueGrey : null,
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ),
-                    radius: 20.0,
-                    backgroundImage: widget.guest
-                        ? null
-                        : NetworkImage(widget.detailsUser.photoUrl),
-                  ),
+                    // NAVIGATIONS
+                    sideTile(
+                        title: "Overview",
+                        function: () {
+                          print("==========");
+                        }),
+                    sideTile(
+                        title: "Analytics",
+                        function: () {
+                          print("==========");
+                        }),
+                    sideTile(
+                        title: "Temperature log",
+                        function: () {
+                          print("==========");
+                        }),
+                    sideTile(
+                        title: "Humidity log",
+                        function: () {
+                          print("==========");
+                        }),
+                    sideTile(
+                        title: "Controls",
+                        function: () {
+                          print("==========");
+                        }),
+                    sideTile(
+                        title: "Export",
+                        function: () {
+                          print("==========");
+                        }),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
-        body: StreamBuilder(
-          stream: ref.onValue,
-          builder: (context, snap) {
-            return snap.data == null
-                ? Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          isLiveState
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 9.0),
-                                  child: FadeTransition(
-                                    opacity: CurvedAnimation(
-                                        parent: AnimationController(
-                                          duration:
-                                              const Duration(milliseconds: 750),
-                                          vsync: this,
-                                        )..repeat(reverse: true),
-                                        curve: Curves.easeIn),
+          ),
+
+          // APPBAR
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: Colors.blueGrey),
+            foregroundColor: Colors.blueGrey,
+            backgroundColor: Colors.white,
+            title: Text(
+              "Agro Cloud",
+              style: TextStyle(
+                  fontFamily: "NunitoSans-semibold", color: Colors.blueGrey),
+            ),
+            actions: <Widget>[
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => User(
+                        userdetails: widget.detailsUser,
+                        guest: widget.guest,
+                      ),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Hero(
+                    tag: "avatar",
+                    child: CircleAvatar(
+                      backgroundColor: widget.guest ? Colors.blueGrey : null,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                      ),
+                      radius: 20.0,
+                      backgroundImage: widget.guest
+                          ? null
+                          : NetworkImage(widget.detailsUser.photoUrl),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          body: StreamBuilder(
+            stream: ref.onValue,
+            builder: (context, snap) {
+              return snap.data == null
+                  ? Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            isLiveState
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 9.0),
+                                    child: FadeTransition(
+                                      opacity: CurvedAnimation(
+                                          parent: AnimationController(
+                                            duration: const Duration(
+                                                milliseconds: 750),
+                                            vsync: this,
+                                          )..repeat(reverse: true),
+                                          curve: Curves.easeIn),
+                                      child: Row(
+                                        children: [
+                                          Spacer(),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 5.0),
+                                            child: CircleAvatar(
+                                              backgroundColor: Colors.green,
+                                              maxRadius: 5,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Live",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Spacer(),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.only(top: 9.0),
                                     child: Row(
                                       children: [
                                         Spacer(),
@@ -141,284 +249,265 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                           padding:
                                               const EdgeInsets.only(right: 5.0),
                                           child: CircleAvatar(
-                                            backgroundColor: Colors.green,
+                                            backgroundColor: Colors.red,
                                             maxRadius: 5,
                                           ),
                                         ),
                                         Text(
-                                          "Live",
+                                          "Disconnected",
                                           style: TextStyle(
+                                              fontFamily: "NunitoSans-regular",
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Spacer(),
                                       ],
                                     ),
                                   ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 9.0),
-                                  child: Row(
-                                    children: [
-                                      Spacer(),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 5.0),
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.red,
-                                          maxRadius: 5,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Disconnected",
-                                        style: TextStyle(
-                                            fontFamily: "NunitoSans-regular",
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Spacer(),
-                                    ],
-                                  ),
-                                ),
-                          // ListTile(
-                          //   title: Text("Time Stamp"),
-                          //   trailing: Text(snap.data.snapshot.value["TimeStamp"]
-                          //       .toString()),
-                          // ),
-                          SizedBox(height: 20),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            height: MediaQuery.of(context).size.height / 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                    height:
-                                        (MediaQuery.of(context).size.height /
-                                                2) /
-                                            3.3,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Card(
-                                        child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Image(
-                                                height: 30,
-                                                image: AssetImage(
-                                                  'assets/photo/humidity.png',
+                            // ListTile(
+                            //   title: Text("Time Stamp"),
+                            //   trailing: Text(snap.data.snapshot.value["TimeStamp"]
+                            //       .toString()),
+                            // ),
+                            SizedBox(height: 20),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              height: MediaQuery.of(context).size.height / 2,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      height:
+                                          (MediaQuery.of(context).size.height /
+                                                  2) /
+                                              3.3,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Card(
+                                          child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Image(
+                                                  height: 30,
+                                                  image: AssetImage(
+                                                    'assets/photo/humidity.png',
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              oneThirdContainer(
-                                                content: Text(
-                                                  "HUMIDITY",
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          "NunitoSans-bold",
-                                                      fontSize: 15),
+                                                SizedBox(
+                                                  width: 10,
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          oneThirdContainer(
-                                            content: Text(
-                                              snap.data.snapshot
-                                                  .value["DHT11Humidity"],
-                                              style: TextStyle(
-                                                  fontFamily:
-                                                      "NunitoSans-light",
-                                                  fontSize: 28),
+                                                oneThirdContainer(
+                                                  content: Text(
+                                                    "HUMIDITY",
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            "NunitoSans-bold",
+                                                        fontSize: 15),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.chevron_right),
-                                            onPressed: () {},
-                                          )
-                                        ],
-                                      ),
-                                    ))),
-                                Container(
-                                  height:
-                                      (MediaQuery.of(context).size.height / 2) /
-                                          3.3,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Card(
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              SvgPicture.asset(
-                                                'assets/icons/thermometer.svg',
-                                                height: 30,
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              oneThirdContainer(
-                                                content: Text(
-                                                  "TEMPERATURE",
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          "NunitoSans-bold",
-                                                      fontSize: 15),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          oneThirdContainer(
-                                            content: Text(
+                                            oneThirdContainer(
+                                              content: Text(
                                                 snap.data.snapshot
-                                                    .value["DHT11Temperature"],
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "NunitoSans-light",
-                                                    fontSize: 28)),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.chevron_right),
-                                            onPressed: () {},
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height:
-                                      (MediaQuery.of(context).size.height / 2) /
-                                          3.3,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Card(
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Image.asset(
-                                                'assets/photo/soilmoisture.png',
-                                                height: 45,
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              oneThirdContainer(
-                                                content: Text(
-                                                  "SOIL MOISTURE",
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          "NunitoSans-bold",
-                                                      fontSize: 15),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          oneThirdContainer(
-                                            content: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  3,
-                                              child: Text(
-                                                "30%",
+                                                    .value["DHT11Humidity"],
                                                 style: TextStyle(
                                                     fontFamily:
                                                         "NunitoSans-light",
                                                     fontSize: 28),
                                               ),
                                             ),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.chevron_right),
-                                            onPressed: () {},
-                                          )
-                                        ],
+                                            IconButton(
+                                              icon: Icon(Icons.chevron_right),
+                                              onPressed: () {},
+                                            )
+                                          ],
+                                        ),
+                                      ))),
+                                  Container(
+                                    height:
+                                        (MediaQuery.of(context).size.height /
+                                                2) /
+                                            3.3,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Card(
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/icons/thermometer.svg',
+                                                  height: 30,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                oneThirdContainer(
+                                                  content: Text(
+                                                    "TEMPERATURE",
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            "NunitoSans-bold",
+                                                        fontSize: 15),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            oneThirdContainer(
+                                              content: Text(
+                                                  snap.data.snapshot.value[
+                                                      "DHT11Temperature"],
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "NunitoSans-light",
+                                                      fontSize: 28)),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.chevron_right),
+                                              onPressed: () {},
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    height:
+                                        (MediaQuery.of(context).size.height /
+                                                2) /
+                                            3.3,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Card(
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Image.asset(
+                                                  'assets/photo/soilmoisture.png',
+                                                  height: 45,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                oneThirdContainer(
+                                                  content: Text(
+                                                    "SOIL MOISTURE",
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            "NunitoSans-bold",
+                                                        fontSize: 15),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            oneThirdContainer(
+                                              content: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    3,
+                                                child: Text(
+                                                  "30%",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "NunitoSans-light",
+                                                      fontSize: 28),
+                                                ),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.chevron_right),
+                                              onPressed: () {},
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
 
-                          SizedBox(height: 20),
-                          Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.red.shade200,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50))),
-                              height: 100,
-                              width: 100,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      child: Text(
-                                        "Control Switch",
-                                        textAlign: TextAlign.center,
+                            SizedBox(height: 20),
+                            Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black12,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50))),
+                                height: 100,
+                                width: 100,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        child: Text(
+                                          "Control Switch",
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
-                                    ),
-                                    FlutterSwitch(
-                                      activeToggleColor: Colors.green,
-                                      activeColor: Colors.black12,
-                                      inactiveColor: Colors.black26,
-                                      toggleSize: 20,
-                                      valueFontSize: 15,
-                                      width: 60,
-                                      height: 25,
-                                      showOnOff: true,
-                                      activeTextColor: Colors.black,
-                                      inactiveTextColor: Colors.blue[50],
-                                      value: ledStatus,
-                                      onToggle: (value) {
-                                        setState(() {
-                                          ledStatus = value;
-                                          if (ledStatus) {
-                                            ref.child("LED").set(1);
-                                          } else {
-                                            ref.child("LED").set(0);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              )),
-                          SizedBox(height: 50),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => DatasTable()));
-                            },
-                            child: Text("All Data"),
-                          ),
-                        ],
+                                      FlutterSwitch(
+                                        activeToggleColor: Colors.green,
+                                        activeColor: Colors.black12,
+                                        inactiveColor: Colors.black26,
+                                        toggleSize: 20,
+                                        valueFontSize: 15,
+                                        width: 60,
+                                        height: 25,
+                                        showOnOff: true,
+                                        activeTextColor: Colors.black,
+                                        inactiveTextColor: Colors.blue[50],
+                                        value: ledStatus,
+                                        onToggle: (value) {
+                                          setState(() {
+                                            ledStatus = value;
+                                            if (ledStatus) {
+                                              ref.child("LED").set(1);
+                                            } else {
+                                              ref.child("LED").set(0);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            SizedBox(height: 50),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) => DatasTable()));
+                              },
+                              child: Text("All Data"),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-          },
-        ));
+                    );
+            },
+          )),
+    );
   }
 }
