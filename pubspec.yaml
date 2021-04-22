@@ -40,6 +40,7 @@ dependencies:
   simple_animations: ^3.0.3
   flare_splash_screen: ^4.0.0
   flutter_spinkit: "^4.1.2"
+  fl_chart: ^0.35.0
 
 dev_dependencies:
   flutter_test:

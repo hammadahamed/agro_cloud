@@ -16,13 +16,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-     theme: ThemeData(brightness:Brightness.light),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Color(0xff46426c),
+      ),
       routes: {
         '/': (_) => Splash(),
         //'/splash': (_) => Splash(),
         '/login': (_) => Login(),
         '/home': (_) => Home(),
-        
       },
     );
   }

@@ -17,7 +17,7 @@ getPerm() async {
 getCsv(List<String> time, List<String> date, List<String> humidity,
     List<String> temperature) async {
   String file;
-  String dir;
+  // String dir;
 //create an element rows of type list of list. All the above data set are stored in associate list
 //Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
   List<List<dynamic>> rows = [
@@ -38,22 +38,26 @@ getCsv(List<String> time, List<String> date, List<String> humidity,
   print(variable);
   if (variable[Permission.storage] == PermissionStatus.denied) {
     Get.snackbar("Failed", "please get permission",
-        snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red,dismissDirection: SnackDismissDirection.HORIZONTAL);
-        return ;
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        dismissDirection: SnackDismissDirection.HORIZONTAL);
+    return;
     // We didn't ask for permission yet or the permission has been denied before but not permanently.
   }
 
 // // You can can also directly ask the permission about its status.
-if (await Permission.storage.isRestricted) {
-  Get.snackbar("Failed", "please Change in Settings",
-        snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red,dismissDirection: SnackDismissDirection.HORIZONTAL);
-        return;
-  // The OS restricts access, for example because of parental controls.
-}
+  if (await Permission.storage.isRestricted) {
+    Get.snackbar("Failed", "please Change in Settings",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        dismissDirection: SnackDismissDirection.HORIZONTAL);
+    return;
+    // The OS restricts access, for example because of parental controls.
+  }
 
 //   PermissionStatus permissionResult = await SimplePermissions.requestPermission(
 //       Permission.WriteExternalStorage);
-  if (await Permission.storage.isGranted)  {
+  if (await Permission.storage.isGranted) {
 //store file in documents folder
 
     String dir =
@@ -67,6 +71,8 @@ if (await Permission.storage.isRestricted) {
     String csv = const ListToCsvConverter().convert(rows);
     f.writeAsString(csv);
     Get.snackbar("Success", "File Created Successfully",
-        snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.green,dismissDirection: SnackDismissDirection.HORIZONTAL);
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        dismissDirection: SnackDismissDirection.HORIZONTAL);
   }
 }
