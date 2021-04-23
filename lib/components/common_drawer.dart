@@ -52,7 +52,7 @@ class _CommonDrawerState extends State<CommonDrawer> {
           children: [
             // NAVIGATIONS
             Container(
-              height: Get.height * .85,
+              height: Get.height * .8,
               child: Column(
                 children: [
                   // USER BANNER
