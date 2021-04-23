@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'package:agro_cloud/screens/soilMoisture.dart';
+import 'package:agro_cloud/screens/soilMoistureLog.dart';
 import 'package:agro_cloud/screens/temperatureLog.dart';
 import 'package:agro_cloud/screens/user.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -256,7 +257,11 @@ class _Home extends State<Home> with TickerProviderStateMixin {
             stream: ref.onValue,
             builder: (context, snap) {
               return snap.data == null
-                  ? Center(child: CircularProgressIndicator())
+                  ? Center(
+                      child: SpinKitDoubleBounce(
+                      color: MyColors.primaryColor,
+                      size: 50.0,
+                    ))
                   : SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

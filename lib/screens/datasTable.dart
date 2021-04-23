@@ -1,6 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:agro_cloud/utils.Dart';
 
 import '../components/exportCSV.dart';
 
@@ -17,6 +20,8 @@ class _DatasTableState extends State<DatasTable> {
   List<String> time = [];
   List<String> date = [];
   List<String> humidity = [];
+  List<String> soilmoisture = [];
+  bool isLoad = false;
 
   allData() async {
     time.clear();
@@ -27,6 +32,7 @@ class _DatasTableState extends State<DatasTable> {
     final ref = fb.reference();
     await ref.child("DataArray").once().then((DataSnapshot data) {
       data.value["DateTime"].forEach((key, value) => {
+            soilmoisture.add("NA"),
             dateTime = value.split(RegExp(r"[T,+]")),
             frmt = new DateFormat("yyyy-MM-dd HH:mm:ss")
                 .parse(dateTime[0] + " " + dateTime[1]),
@@ -52,15 +58,19 @@ class _DatasTableState extends State<DatasTable> {
     });
 
     for (var i = 0; i < time.length; i++) {
+      int j = i + 1;
+      int len = time.length;
       setState(() {
         allRow.add(
           DataRow(
             selected: i % 2 == 0 ? true : false,
             cells: <DataCell>[
+              DataCell(Text("$j of $len")),
               DataCell(Text(date[i])),
               DataCell(Text(time[i])),
               DataCell(Text(temperature[i])),
               DataCell(Text(humidity[i])),
+              DataCell(Text("NA")),
             ],
           ),
         );
@@ -80,14 +90,73 @@ class _DatasTableState extends State<DatasTable> {
     // final ref = fb.reference();
     return Scaffold(
         appBar: AppBar(
-          title: Text("All Data Log"),
+          iconTheme: IconThemeData(color: MyColors.primaryColor),
+          backgroundColor: Get.isDarkMode ? null : Colors.white,
+          title: Text(
+            "All Data Log",
+            style: TextStyle(
+              fontFamily: "NunitoSans-semibold",
+              color: Get.isDarkMode ? Colors.white : MyColors.primaryColor,
+            ),
+          ),
           actions: [
-            IconButton(
-                tooltip: "Refresh",
-                onPressed: () {
-                  allData();
-                },
-                icon: Icon(Icons.refresh)),
+            Row(
+              children: [
+                IconButton(
+                  tooltip: "Download Data",
+                  icon: Icon(Icons.launch_rounded),
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Export Data!'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Text(
+                                    'Are you sure want to Export All the Data Table?'),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('Yes'),
+                              onPressed: () {
+                                allCsv(date, time, temperature, humidity,
+                                    soilmoisture);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text('No'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+                IconButton(
+                    tooltip: "Refresh",
+                    icon: Icon(Icons.refresh),
+                    onPressed: () async {
+                      setState(() {
+                        isLoad = true;
+                      });
+                      await Future.delayed(Duration(milliseconds: 3000), () {
+                        allData();
+                      });
+                      setState(() {
+                        isLoad = false;
+                      });
+                    }),
+              ],
+            ),
           ],
         ),
         body: SingleChildScrollView(
@@ -95,42 +164,104 @@ class _DatasTableState extends State<DatasTable> {
           child: Center(
               child: Column(
             children: [
-              allRow.isEmpty
-                  ? Center(child: CircularProgressIndicator())
-                  : SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Column(
-                        children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                getCsv(time, date, temperature, humidity);
-                              },
-                              child: Text("Export")),
-                          DataTable(columns: const <DataColumn>[
-                            DataColumn(
-                              label: Text(
-                                'Date',
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  children: [
+                    DataTable(
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'S. No.',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            DataColumn(
-                              label: Text(
-                                'Time',
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Date',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            DataColumn(
-                              label: Text(
-                                'Temperature',
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Time',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            DataColumn(
-                              label: Text(
-                                'Humidity',
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Temperature',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ], rows: allRow),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Humidity',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Soil Moisture',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ],
-                      ),
-                    )
+                        dividerThickness: isLoad ? 0 : 1,
+                        rows: !isLoad
+                            ? allRow
+                            : [
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                  ],
+                                ),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                  ],
+                                ),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("")),
+                                    DataCell(Center(
+                                      child: SpinKitDoubleBounce(
+                                        color: MyColors.primaryColor,
+                                        size: 50.0,
+                                      ),
+                                    )),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                  ],
+                                ),
+                              ]),
+                  ],
+                ),
+              )
             ],
           )),
         ));
