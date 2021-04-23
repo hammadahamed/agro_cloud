@@ -37,8 +37,10 @@ class _HumidityLogState extends State<HumidityLog>
 
     await ref.child("DataArray").once().then((DataSnapshot data) {
       print("--------------------- DATA ----------------------");
-      print(data.toString());
+      // print(data.toString());
       print("--------------------- DATA ----------------------");
+
+      // DATE
       data.value["DateTime"].forEach((key, value) => {
             dateTime = value.split(RegExp(r"[T,+]")),
             frmt = new DateFormat("yyyy-MM-dd HH:mm:ss")
@@ -103,9 +105,6 @@ class _HumidityLogState extends State<HumidityLog>
   Timer timer;
   @override
   void initState() {
-    timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      isLive();
-    });
     super.initState();
   }
 
@@ -118,6 +117,9 @@ class _HumidityLogState extends State<HumidityLog>
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      isLive();
+    });
 
     return SafeArea(
       child: Scaffold(
@@ -293,88 +295,76 @@ class _HumidityLogState extends State<HumidityLog>
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> snapshot) {
                         // snapshot.
-                        return snapshot.data.length < time.length
-                            ? Container(
-                                height: 100,
-                                width: 100,
-                                child: CircularProgressIndicator(),
-                              )
-                            : DataTable(
-                                columnSpacing: 15,
-                                columns: <DataColumn>[
-                                  DataColumn(
-                                    label: Text(
-                                      'S. No. \n(' +
-                                          time.length.toString() +
-                                          ")",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                        return DataTable(
+                            columnSpacing: 15,
+                            columns: <DataColumn>[
+                              DataColumn(
+                                label: Text(
+                                  'S. No. \n(' + time.length.toString() + ")",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  'Date',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  'Time',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  'Humidity',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                            dividerThickness: !snapshot.hasData ? 0 : 1,
+                            rows: snapshot.hasData
+                                ? snapshot.data
+                                : [
+                                    DataRow(
+                                      cells: <DataCell>[
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                      ],
                                     ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Date',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                    DataRow(
+                                      cells: <DataCell>[
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                      ],
                                     ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Time',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                    DataRow(
+                                      cells: <DataCell>[
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                        DataCell(Center(
+                                          child: SpinKitDoubleBounce(
+                                            color: MyColors.primaryColor,
+                                            size: 50.0,
+                                          ),
+                                        )),
+                                        DataCell(Text("")),
+                                      ],
                                     ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Humidity',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                    DataRow(
+                                      cells: <DataCell>[
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                        DataCell(Text("")),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                                dividerThickness: !snapshot.hasData ? 0 : 1,
-                                rows: snapshot.hasData
-                                    ? snapshot.data
-                                    : [
-                                        DataRow(
-                                          cells: <DataCell>[
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                          ],
-                                        ),
-                                        DataRow(
-                                          cells: <DataCell>[
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                          ],
-                                        ),
-                                        DataRow(
-                                          cells: <DataCell>[
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                            DataCell(Center(
-                                              child: SpinKitDoubleBounce(
-                                                color: MyColors.primaryColor,
-                                                size: 50.0,
-                                              ),
-                                            )),
-                                            DataCell(Text("")),
-                                          ],
-                                        ),
-                                        DataRow(
-                                          cells: <DataCell>[
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                            DataCell(Text("")),
-                                          ],
-                                        ),
-                                      ]);
+                                  ]);
                       },
                     ),
                   ),
