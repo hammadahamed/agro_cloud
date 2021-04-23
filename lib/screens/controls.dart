@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:agro_cloud/components/common_drawer.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
@@ -53,6 +54,7 @@ class _ControlsState extends State<Controls> {
 
     return SafeArea(
         child: Scaffold(
+      drawer: CommonDrawer(),
       appBar: AppBar(
         iconTheme: IconThemeData(
           color: MyColors.primaryColor,

@@ -1,3 +1,4 @@
+import 'package:agro_cloud/components/common_drawer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -89,6 +90,7 @@ class _DatasTableState extends State<DatasTable> {
     // SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
     // final ref = fb.reference();
     return Scaffold(
+        drawer: CommonDrawer(),
         appBar: AppBar(
           iconTheme: IconThemeData(color: MyColors.primaryColor),
           backgroundColor: Get.isDarkMode ? null : Colors.white,

@@ -1,3 +1,4 @@
+import 'package:agro_cloud/components/common_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:agro_cloud/utils.Dart';
 import 'package:get/get.dart';
@@ -11,8 +12,8 @@ class _SoilMoistureLogState extends State<SoilMoistureLog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CommonDrawer(),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         iconTheme: IconThemeData(color: MyColors.primaryColor),
         title: Text(
           "Soil Moisture Logs",

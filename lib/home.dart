@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:agro_cloud/controller/auth_controller.dart';
 import 'package:agro_cloud/screens/soilMoistureLog.dart';
 import 'package:agro_cloud/components/custom_charts.dart';
 import 'package:agro_cloud/screens/temperatureLog.dart';
@@ -16,23 +17,47 @@ import 'components/common_drawer.dart';
 import 'screens/humidityLog.dart';
 
 class Home extends StatefulWidget {
-  final GoogleSignInAccount detailsUser;
-  final bool guest;
-  Home({Key key, this.detailsUser, this.guest}) : super(key: key);
+  Home({Key key}) : super(key: key);
   @override
   _Home createState() => _Home();
 }
 
 class _Home extends State<Home> with TickerProviderStateMixin {
+  AuthController auth = Get.find();
+
   GoogleSignIn googleSignIn = GoogleSignIn();
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
   bool isDark = Get.isDarkMode;
 
+  var user;
+
   Orientation mode;
   double thirdPart;
 
   bool isShowingMainData;
+
+  @override
+  void dispose() {
+    // timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    //   isLive();
+    // });
+
+    authenticate();
+    super.initState();
+
+    isShowingMainData = true;
+  }
+
+  authenticate() {
+    user = auth.userObj;
+  }
 
   isLive() {
     final re = fb.reference();
@@ -58,15 +83,6 @@ class _Home extends State<Home> with TickerProviderStateMixin {
           isLiveState = true;
         });
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      isLive();
-    });
-    isShowingMainData = true;
   }
 
   Widget oneThirdContainer({Widget content}) {
@@ -108,6 +124,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     );
   }
 
+  Timer timer;
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
@@ -119,14 +136,11 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     return SafeArea(
       child: Scaffold(
           // DRAWER
-          drawer: CommonDrawer(
-            isGuest: widget.guest,
-            userDetails: widget.detailsUser,
-          ),
+          drawer: CommonDrawer(),
 
           // APPBAR
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            // automaticallyImplyLeading: false,
             iconTheme: IconThemeData(color: MyColors.primaryColor),
             backgroundColor: Get.isDarkMode ? null : Colors.white,
             title: Text(
@@ -141,10 +155,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                   Navigator.push(
                     context,
                     new MaterialPageRoute(
-                      builder: (context) => User(
-                        userdetails: widget.detailsUser,
-                        guest: widget.guest,
-                      ),
+                      builder: (context) => User(),
                     ),
                   );
                 },
@@ -153,19 +164,18 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                   child: Hero(
                     tag: "avatar",
                     child: CircleAvatar(
-                      backgroundColor: widget.guest
-                          ? Get.isDarkMode
-                              ? Colors.black26
-                              : Colors.grey[100]
+                      backgroundColor: user != null
+                          ? (Get.isDarkMode ? Colors.black26 : Colors.grey[100])
+                          : Colors.grey[100],
+                      child: user == null
+                          ? Icon(
+                              Icons.person,
+                              color: MyColors.primaryColor,
+                            )
                           : null,
-                      child: Icon(
-                        Icons.person,
-                        color: MyColors.primaryColor,
-                      ),
                       radius: 20.0,
-                      backgroundImage: widget.guest
-                          ? null
-                          : NetworkImage(widget.detailsUser.photoUrl),
+                      backgroundImage:
+                          user == null ? null : NetworkImage(user.photoUrl),
                     ),
                   ),
                 ),

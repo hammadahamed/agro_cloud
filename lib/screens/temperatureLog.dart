@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:agro_cloud/components/common_drawer.dart';
 import 'package:agro_cloud/components/custom_charts.dart';
 import 'package:agro_cloud/components/exportCSV.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -127,8 +128,8 @@ class _TemperatureLogState extends State<TemperatureLog>
   Widget build(BuildContext context) {
     final ref = fb.reference();
     return Scaffold(
+      drawer: CommonDrawer(),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         iconTheme: IconThemeData(color: MyColors.primaryColor),
         title: Text(
           "Temperature Logs",
@@ -302,7 +303,6 @@ class _TemperatureLogState extends State<TemperatureLog>
                       columnSpacing: 15,
                       columns: <DataColumn>[
                         DataColumn(
-                          
                           label: Text(
                             "S. No.\n(" + time.length.toString() + ")",
                             style: TextStyle(fontWeight: FontWeight.bold),

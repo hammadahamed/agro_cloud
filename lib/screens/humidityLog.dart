@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:agro_cloud/components/common_drawer.dart';
 import 'package:agro_cloud/components/custom_charts.dart';
 import 'package:agro_cloud/components/exportCSV.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -68,17 +69,19 @@ class _HumidityLogState extends State<HumidityLog>
     for (var i = 0; i < time.length; i++) {
       int j = i + 1;
 
-      allRow.add(
-        DataRow(
-          selected: i % 2 == 0 ? true : false,
-          cells: <DataCell>[
-            DataCell(Text("$j")),
-            DataCell(Text(date[i])),
-            DataCell(Text(time[i])),
-            DataCell(Text(humidity[i])),
-          ],
-        ),
-      );
+      if (i > time.length - 50 && i < time.length) {
+        allRow.add(
+          DataRow(
+            selected: i % 2 == 0 ? true : false,
+            cells: <DataCell>[
+              DataCell(Text("$j")),
+              DataCell(Text(date[i])),
+              DataCell(Text(time[i])),
+              DataCell(Text(humidity[i])),
+            ],
+          ),
+        );
+      }
     }
     allDataLoading = true;
 
@@ -129,8 +132,8 @@ class _HumidityLogState extends State<HumidityLog>
 
     return SafeArea(
       child: Scaffold(
+        drawer: CommonDrawer(),
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           iconTheme: IconThemeData(color: MyColors.primaryColor),
           title: Text(
             "Humidity Logs",

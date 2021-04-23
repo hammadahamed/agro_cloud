@@ -1,7 +1,7 @@
+import 'package:agro_cloud/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sign_button/sign_button.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../home.dart';
 
 class Login extends StatefulWidget {
@@ -10,9 +10,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool isLoggedin = false;
-  GoogleSignInAccount userObj;
-  GoogleSignIn googleSignIn = GoogleSignIn();
+  AuthController auth = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -84,27 +82,16 @@ class _LoginState extends State<Login> {
                 child: SignInButton(
                   buttonType: ButtonType.google,
                   onPressed: () async {
-                    googleSignIn.signIn().then((userData) {
-                      print("++++++++++++im wornig");
-                      setState(() {
-                        userObj = userData;
-                      });
-                      Navigator.pushReplacement(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => Home(
-                                    detailsUser: userObj,
-                                  )));
-                    }).catchError((e) {
-                      print(e);
-                    });
+                    // SIGN iin LOGIC
+                    auth.signIn();
                   },
                 ),
               ),
 
               ElevatedButton(
                 onPressed: () {
-                  Get.off(() => Home(guest: true));
+                  auth.userObj = null;
+                  Get.off(() => Home());
                 },
                 style: ButtonStyle(
                     backgroundColor:

@@ -1,12 +1,15 @@
+import 'package:agro_cloud/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'screens/login.dart';
-import 'spalsh.dart';
+import 'splash.dart';
 import 'package:agro_cloud/home.dart';
+import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Get.put(AuthController());
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -17,7 +20,6 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.light,
         primaryColor: Color(0xff46426c),
       ),
       routes: {

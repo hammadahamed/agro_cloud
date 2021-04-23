@@ -1,6 +1,8 @@
+import 'package:agro_cloud/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:agro_cloud/home.dart';
+import 'package:get/get.dart';
 import 'screens/login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:simple_animations/simple_animations.dart';
@@ -13,29 +15,23 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   bool signIn;
   GoogleSignInAccount userObj;
-  GoogleSignIn googleSignIn = GoogleSignIn();
-  void isSignn() async {
-    signIn = await googleSignIn.isSignedIn();
+  AuthController auth = Get.find();
+  void divertor() async {
+    signIn = await auth.googleSignIn.isSignedIn();
     if (signIn) {
-      userObj = await googleSignIn.signInSilently();
-      await Future.delayed(
-          Duration(milliseconds: 3000),
-          () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => Home(
-                    detailsUser: userObj,
-                  ))));
+      auth.userObj = await auth.googleSignIn.signInSilently();
+      print("----------------------------> user obj : >> $userObj");
+
+      Get.to(() => Home());
     } else {
-      await Future.delayed(
-          Duration(milliseconds: 3000),
-          () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => Login())));
+      Get.to(() => Login());
     }
   }
 
   @override
   void initState() {
     super.initState();
-    isSignn();
+    divertor();
   }
 
   @override
