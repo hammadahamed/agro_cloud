@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:agro_cloud/components/custom_charts.dart';
 import 'package:agro_cloud/components/exportCSV.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,11 @@ class _HumidityLogState extends State<HumidityLog>
   List<DataRow> dataRows;
   List<DataRow> allRow = [];
 
+  bool allDataLoading = false;
+
 // ------- ALL DATA ---------------------------------
   allData() async {
+    allDataLoading = true;
     time.clear();
 
     humidity.clear();
@@ -76,6 +80,8 @@ class _HumidityLogState extends State<HumidityLog>
         ),
       );
     }
+    allDataLoading = true;
+
     return allRow;
   }
 
@@ -283,6 +289,7 @@ class _HumidityLogState extends State<HumidityLog>
                 margin: EdgeInsets.only(top: 10),
                 color: MyColors.primaryColor,
                 height: Get.height * .3,
+                child: CustomCharts(),
               ),
               // THIRD HALF
               Container(
@@ -324,44 +331,44 @@ class _HumidityLogState extends State<HumidityLog>
                               ),
                             ],
                             dividerThickness: !snapshot.hasData ? 0 : 1,
-                            rows: snapshot.hasData
+                            rows: allDataLoading
                                 ? snapshot.data
                                 : [
                                     DataRow(
                                       cells: <DataCell>[
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
                                       ],
                                     ),
                                     DataRow(
                                       cells: <DataCell>[
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
                                       ],
                                     ),
                                     DataRow(
                                       cells: <DataCell>[
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
                                         DataCell(Center(
                                           child: SpinKitDoubleBounce(
                                             color: MyColors.primaryColor,
                                             size: 50.0,
                                           ),
                                         )),
-                                        DataCell(Text("")),
+                                        DataCell(Text("--")),
                                       ],
                                     ),
                                     DataRow(
                                       cells: <DataCell>[
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
-                                        DataCell(Text("")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
+                                        DataCell(Text("--")),
                                       ],
                                     ),
                                   ]);
