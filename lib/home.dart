@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:agro_cloud/components/custom_charts.dart';
 import 'package:agro_cloud/screens/soilMoisture.dart';
 import 'package:agro_cloud/screens/temperatureLog.dart';
 import 'package:agro_cloud/screens/user.dart';
@@ -10,9 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
-import 'screens/datasTable.dart';
-import 'package:agro_cloud/screens/controls.dart';
-
+import 'components/common_drawer.dart';
 import 'screens/humidityLog.dart';
 
 class Home extends StatefulWidget {
@@ -28,6 +27,9 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
   bool isDark = Get.isDarkMode;
+
+  Orientation mode;
+  double thirdPart;
 
   bool isShowingMainData;
 
@@ -75,7 +77,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   cardContainer({child}) {
     return Container(
-      height: (Get.height * .3) / 3,
+      height: thirdPart / 3,
       width: Get.width,
       child: child,
     );
@@ -83,11 +85,18 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   Widget chipContainer({child}) {
     return Container(
-      width: isLiveState ? 75 : 150,
-      height: 25,
+      width: isLiveState
+          ? mode == Orientation.portrait
+              ? 75
+              : 150
+          : mode == Orientation.portrait
+              ? 150
+              : 300,
+      height: mode == Orientation.portrait ? 25 : 50,
       margin: EdgeInsets.only(top: 10),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+            Radius.circular(mode == Orientation.portrait ? 15 : 25)),
         color: Color(0xff46426c),
       ),
       child: Column(
@@ -98,112 +107,20 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  Widget sideTile({String title, function}) {
-    return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(fontFamily: "NunitoSans-regular"),
-      ),
-      onTap: function,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
 
-    Orientation mode = MediaQuery.of(context).orientation;
-    double firstPart =
-        mode == Orientation.landscape ? Get.height : Get.height * .4;
-    double secondPart =
-        mode == Orientation.landscape ? Get.height : Get.height * .3;
+    mode = MediaQuery.of(context).orientation;
+
+    thirdPart = mode == Orientation.landscape ? Get.height : Get.height * .3;
 
     return SafeArea(
       child: Scaffold(
           // DRAWER
-          drawer: Drawer(
-            child: Container(
-              height: Get.height,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // USER BANNER
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          image: DecorationImage(
-                              colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.8),
-                                  BlendMode.dstATop),
-                              image: AssetImage(
-                                'assets/photo/black_abstract.jpg',
-                              ),
-                              fit: BoxFit.cover)),
-                      height: Get.height / 4,
-                      width: double.maxFinite,
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Container(
-                          width: Get.width / 3,
-                          child: Text(
-                            widget.guest
-                                ? " Welcome \nGuest,\n"
-                                : " Welcome" + widget.detailsUser.toString(),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: Get.width * .075,
-                                fontFamily: "NunitoSans-regular"),
-                          ),
-                        ),
-                      ),
-                    ),
-                    // NAVIGATIONS
-                    sideTile(
-                        title: "Overview",
-                        function: () {
-                          Navigator.pop(context);
-                        }),
-                    sideTile(
-                        title: "Analytics",
-                        function: () {
-                          print("==========");
-                        }),
-                    sideTile(
-                        title: "Controls",
-                        function: () {
-                          // print("==========");
-                          Navigator.pop(context);
-                          Get.to(Controls());
-                        }),
-
-                    sideTile(
-                        title: "Humidity log",
-                        function: () {
-                          Navigator.pop(context);
-                          Get.to(HumidityLog());
-                        }),
-                    sideTile(
-                        title: "Temperature log",
-                        function: () {
-                          Navigator.pop(context);
-                          Get.to(TemperatureLog());
-                        }),
-                    sideTile(
-                        title: "Soil Moisture log",
-                        function: () {
-                          Navigator.pop(context);
-                          Get.to(SoilMoistureLog());
-                        }),
-                    sideTile(
-                        title: "Export",
-                        function: () {
-                          Navigator.pop(context);
-                          Get.to(DatasTable());
-                        }),
-                  ],
-                ),
-              ),
-            ),
+          drawer: CommonDrawer(
+            isGuest: widget.guest,
+            userDetails: widget.detailsUser,
           ),
 
           // APPBAR
@@ -234,11 +151,14 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                   child: Hero(
                     tag: "avatar",
                     child: CircleAvatar(
-                      backgroundColor:
-                          widget.guest ? MyColors.primaryColor : null,
+                      backgroundColor: widget.guest
+                          ? Get.isDarkMode
+                              ? Colors.black26
+                              : Colors.grey[100]
+                          : null,
                       child: Icon(
                         Icons.person,
-                        color: Colors.white,
+                        color: MyColors.primaryColor,
                       ),
                       radius: 20.0,
                       backgroundImage: widget.guest
@@ -261,91 +181,10 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
+// FIRST SECTION
                           // CHART
-                          Container(
-                            height: firstPart,
-                            // margin:
-                            //     EdgeInsets.only(left: 10, right: 10, top: 10),
-                            decoration: const BoxDecoration(
-                              // borderRadius:
-                              //     BorderRadius.all(Radius.circular(3)),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xff2c274c),
-                                  Color(0xff46426c),
-                                ],
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                              ),
-                            ),
-                            child: Stack(
-                              children: <Widget>[
-                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    const Text(
-                                      'Humidity , Moisture , Temperature',
-                                      style: TextStyle(
-                                        fontFamily: "NunitoSans-semibold",
-                                        color: Color(0xff827daa),
-                                        fontSize: 12,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    // const SizedBox(
-                                    //   height: 1,
-                                    // ),
-                                    Text(
-                                      'Overview',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: Get.width * .1,
-                                          fontFamily: "NunitoSans-regular",
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 2),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const SizedBox(
-                                      height: 37,
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 16.0, left: 6.0),
-                                        child: LineChart(
-                                          isShowingMainData
-                                              ? sampleData1()
-                                              : sampleData2(),
-                                          swapAnimationDuration:
-                                              const Duration(milliseconds: 250),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.refresh,
-                                    color: Colors.white.withOpacity(
-                                        isShowingMainData ? 1.0 : 0.5),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      isShowingMainData = !isShowingMainData;
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-
+                          CustomCharts(),
+// SECOND SECTION
                           // MODULE CONNECTION STATUS
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -429,11 +268,11 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                           //       .toString()),
                           // ),
                           SizedBox(height: 20),
-
+// THIRD SECTION
                           // TILES
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 10),
-                            height: secondPart,
+                            height: thirdPart,
                             // color: MyColors.primaryColor,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
