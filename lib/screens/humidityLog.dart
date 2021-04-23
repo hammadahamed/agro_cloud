@@ -23,6 +23,7 @@ class _HumidityLogState extends State<HumidityLog>
   List<String> dateTime = [];
   List<DataRow> allRow = [];
   bool isLoad = false;
+
   allData() async {
     time.clear();
 
@@ -94,13 +95,20 @@ class _HumidityLogState extends State<HumidityLog>
     });
   }
 
+  var timer;
   @override
   void initState() {
     allData();
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
       isLive();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -109,6 +117,7 @@ class _HumidityLogState extends State<HumidityLog>
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           iconTheme: IconThemeData(color: MyColors.primaryColor),
           title: Text(
             "Humidity Logs",
@@ -314,15 +323,7 @@ class _HumidityLogState extends State<HumidityLog>
                                 DataRow(
                                   cells: <DataCell>[
                                     DataCell(Text("")),
-                                      DataCell(Text("")),
                                     DataCell(Text("")),
-                                    DataCell(Text("")),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(Text("")),
-                                      DataCell(Text("")),
                                     DataCell(Text("")),
                                     DataCell(Text("")),
                                   ],
@@ -330,7 +331,15 @@ class _HumidityLogState extends State<HumidityLog>
                                 DataRow(
                                   cells: <DataCell>[
                                     DataCell(Text("")),
-                                      DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
+                                  ],
+                                ),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("")),
+                                    DataCell(Text("")),
                                     DataCell(Center(
                                       child: SpinKitDoubleBounce(
                                         color: MyColors.primaryColor,
@@ -340,10 +349,10 @@ class _HumidityLogState extends State<HumidityLog>
                                     DataCell(Text("")),
                                   ],
                                 ),
-                                 DataRow(
+                                DataRow(
                                   cells: <DataCell>[
                                     DataCell(Text("")),
-                                      DataCell(Text("")),
+                                    DataCell(Text("")),
                                     DataCell(Text("")),
                                     DataCell(Text("")),
                                   ],

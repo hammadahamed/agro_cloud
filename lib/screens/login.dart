@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
 
               ElevatedButton(
                 onPressed: () {
-                  Get.off(Home(guest: true));
+                  Get.off(() => Home(guest: true));
                 },
                 style: ButtonStyle(
                     backgroundColor:

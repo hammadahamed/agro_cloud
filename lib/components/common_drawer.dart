@@ -73,32 +73,32 @@ class CommonDrawer extends StatelessWidget {
                   function: () {
                     // print("==========");
                     Navigator.pop(context);
-                    Get.to(Controls());
+                    Get.to(() => Controls());
                   }),
 
               sideTile(
                   title: "Humidity log",
                   function: () {
                     Navigator.pop(context);
-                    Get.to(HumidityLog());
+                    Get.to(() => HumidityLog());
                   }),
               sideTile(
                   title: "Temperature log",
                   function: () {
                     Navigator.pop(context);
-                    Get.to(TemperatureLog());
+                    Get.to(() => TemperatureLog());
                   }),
               sideTile(
                   title: "Soil Moisture log",
                   function: () {
                     Navigator.pop(context);
-                    Get.to(SoilMoistureLog());
+                    Get.to(() => SoilMoistureLog());
                   }),
               sideTile(
                   title: "Export",
                   function: () {
                     Navigator.pop(context);
-                    Get.to(DatasTable());
+                    Get.to(() => DatasTable());
                   }),
             ],
           ),

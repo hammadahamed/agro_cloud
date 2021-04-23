@@ -126,6 +126,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
           // APPBAR
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             iconTheme: IconThemeData(color: MyColors.primaryColor),
             backgroundColor: Get.isDarkMode ? null : Colors.white,
             title: Text(
