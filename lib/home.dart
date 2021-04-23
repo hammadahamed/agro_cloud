@@ -430,7 +430,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                                       .width /
                                                   3,
                                               child: Text(
-                                                "30%",
+                                                "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     color: Colors.yellow[700],
