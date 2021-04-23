@@ -37,8 +37,10 @@ class _HumidityLogState extends State<HumidityLog>
 
     await ref.child("DataArray").once().then((DataSnapshot data) {
       print("--------------------- DATA ----------------------");
-      print(data.toString());
+      // print(data.toString());
       print("--------------------- DATA ----------------------");
+
+      // DATE
       data.value["DateTime"].forEach((key, value) => {
             dateTime = value.split(RegExp(r"[T,+]")),
             frmt = new DateFormat("yyyy-MM-dd HH:mm:ss")
@@ -103,9 +105,6 @@ class _HumidityLogState extends State<HumidityLog>
   Timer timer;
   @override
   void initState() {
-    timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      isLive();
-    });
     super.initState();
   }
 
@@ -118,6 +117,9 @@ class _HumidityLogState extends State<HumidityLog>
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      isLive();
+    });
 
     return SafeArea(
       child: Scaffold(
@@ -292,12 +294,7 @@ class _HumidityLogState extends State<HumidityLog>
                       future: allData(),
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.data.length < 100) {
-                          return SpinKitDoubleBounce(
-                            color: MyColors.primaryColor,
-                            size: 50.0,
-                          );
-                        }
+                        // snapshot.
                         return DataTable(
                             columnSpacing: 15,
                             columns: <DataColumn>[
@@ -327,7 +324,7 @@ class _HumidityLogState extends State<HumidityLog>
                               ),
                             ],
                             dividerThickness: !snapshot.hasData ? 0 : 1,
-                            rows: snapshot.data.length > 100
+                            rows: snapshot.hasData
                                 ? snapshot.data
                                 : [
                                     DataRow(
