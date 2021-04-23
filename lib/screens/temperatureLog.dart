@@ -300,6 +300,7 @@ class _TemperatureLogState extends State<TemperatureLog>
                       columnSpacing: 15,
                       columns: <DataColumn>[
                         DataColumn(
+                          
                           label: Text(
                             "S. No.\n(" + time.length.toString() + ")",
                             style: TextStyle(fontWeight: FontWeight.bold),

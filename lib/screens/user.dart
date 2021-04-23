@@ -32,11 +32,12 @@ class _UserState extends State<User> {
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          })
+                      Container(),
+                      // IconButton(
+                      //     icon: Icon(Icons.arrow_back),
+                      //     onPressed: () {
+                      //       Navigator.pop(context);
+                      //     })
                     ],
                   ),
                   Row(
