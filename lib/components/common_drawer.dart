@@ -52,7 +52,7 @@ class _CommonDrawerState extends State<CommonDrawer> {
           children: [
             // NAVIGATIONS
             Container(
-              height: (Get.height * .9) * .85,
+              height: (Get.height * .9),
               child: Column(
                 children: [
                   // USER BANNER
@@ -164,7 +164,7 @@ class _CommonDrawerState extends State<CommonDrawer> {
                       Get.off(() => Home());
                     })
                 : sideTile(
-                    title: "Login",
+                    title: "Signin with Google",
                     icon: Icons.login,
                     function: () {
                       auth.signIn();
