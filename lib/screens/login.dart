@@ -81,7 +81,7 @@ class _LoginState extends State<Login> {
               Center(
                 child: SignInButton(
                   buttonType: ButtonType.google,
-                  onPressed: () async {
+                  onPressed: () {
                     // SIGN iin LOGIC
                     auth.signIn();
                   },

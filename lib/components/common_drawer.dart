@@ -160,14 +160,20 @@ class _CommonDrawerState extends State<CommonDrawer> {
                     title: "Logout",
                     icon: Icons.power_settings_new_outlined,
                     function: () {
-                      auth.googleSignIn.signOut();
+                      setState(() {
+                        auth.googleSignIn.signOut();
+                      });
+                      Get.back();
                       Get.off(() => Home());
                     })
                 : sideTile(
                     title: "Signin with Google",
                     icon: Icons.login,
                     function: () {
-                      auth.signIn();
+                      Get.back();
+                      setState(() {
+                        auth.signIn();
+                      });
                     }),
           ],
         ),

@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
@@ -25,7 +24,6 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> with TickerProviderStateMixin {
   AuthController auth = Get.find();
 
-  GoogleSignIn googleSignIn = GoogleSignIn();
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
   bool isDark = Get.isDarkMode;
