@@ -58,7 +58,6 @@ class _TemperatureLogState extends State<TemperatureLog>
 //
     for (var i = 0; i < time.length; i++) {
       int j = i + 1;
-      int len = time.length;
 
       allRow.add(
         DataRow(
@@ -78,7 +77,7 @@ class _TemperatureLogState extends State<TemperatureLog>
             DataRow(
               selected: i % 2 == 0 ? true : false,
               cells: <DataCell>[
-                DataCell(Text("$j of $len")),
+                DataCell(Text("$j")),
                 DataCell(Text(date[i])),
                 DataCell(Text(time[i])),
                 DataCell(Text(temperature[i])),
@@ -102,14 +101,15 @@ class _TemperatureLogState extends State<TemperatureLog>
       DateTime nowTime = DateTime.parse(currTime);
       DateTime lastTime = DateTime.parse(splitted[0] + ' ' + splitted[1]);
       diff = nowTime.difference(lastTime).inSeconds;
-      if (diff > 8) {
+      if (diff > 8 && isLiveState) {
         setState(() {
           isLiveState = false;
         });
-      } else
+      } else if (diff < 8 && !isLiveState) {
         setState(() {
           isLiveState = true;
         });
+      }
     });
   }
 
