@@ -26,6 +26,7 @@ class _TemperatureLogState extends State<TemperatureLog>
   bool isLoad = false;
 
   allData() async {
+    isLoad = true;
     time.clear();
     temperature.clear();
     DateTime frmt;
@@ -54,23 +55,39 @@ class _TemperatureLogState extends State<TemperatureLog>
       allRow.clear();
     });
 
+//
     for (var i = 0; i < time.length; i++) {
       int j = i + 1;
       int len = time.length;
 
-      setState(() {
-        allRow.add(
-          DataRow(
-            selected: i % 2 == 0 ? true : false,
-            cells: <DataCell>[
-              DataCell(Text("$j of $len")),
-              DataCell(Text(date[i])),
-              DataCell(Text(time[i])),
-              DataCell(Text(temperature[i])),
-            ],
-          ),
-        );
-      });
+      allRow.add(
+        DataRow(
+          selected: i % 2 == 0 ? true : false,
+          cells: <DataCell>[
+            DataCell(Text("$j")),
+            DataCell(Text(date[i])),
+            DataCell(Text(time[i])),
+            DataCell(Text(temperature[i])),
+          ],
+        ),
+      );
+
+      if (i == time.length - 1) {
+        setState(() {
+          allRow.add(
+            DataRow(
+              selected: i % 2 == 0 ? true : false,
+              cells: <DataCell>[
+                DataCell(Text("$j of $len")),
+                DataCell(Text(date[i])),
+                DataCell(Text(time[i])),
+                DataCell(Text(temperature[i])),
+              ],
+            ),
+          );
+          isLoad = false;
+        });
+      }
     }
   }
 
@@ -110,6 +127,7 @@ class _TemperatureLogState extends State<TemperatureLog>
     final ref = fb.reference();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         iconTheme: IconThemeData(color: MyColors.primaryColor),
         title: Text(
           "Temperature Logs",
@@ -163,19 +181,12 @@ class _TemperatureLogState extends State<TemperatureLog>
                 },
               ),
               IconButton(
-                  tooltip: "Refresh",
-                  icon: Icon(Icons.refresh),
-                  onPressed: () async {
-                    setState(() {
-                      isLoad = true;
-                    });
-                    await Future.delayed(Duration(milliseconds: 3000), () {
-                      allData();
-                    });
-                    setState(() {
-                      isLoad = false;
-                    });
-                  }),
+                tooltip: "Refresh",
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  allData();
+                },
+              ),
             ],
           )
         ],
@@ -285,10 +296,12 @@ class _TemperatureLogState extends State<TemperatureLog>
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
-                      columns: const <DataColumn>[
+                      showBottomBorder: true,
+                      columnSpacing: 15,
+                      columns: <DataColumn>[
                         DataColumn(
                           label: Text(
-                            'S. No.',
+                            "S. No.\n(" + time.length.toString() + ")",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),

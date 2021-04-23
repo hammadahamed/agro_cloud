@@ -73,9 +73,9 @@ class _HumidityLogState extends State<HumidityLog>
     }
   }
 
-  isLive() {
+  isLive() async {
     final re = fb.reference();
-    re.child("TimeStamp").once().then((DataSnapshot data) {
+    await re.child("TimeStamp").once().then((DataSnapshot data) {
       int diff = 0;
       String time = data.value;
       List<String> splitted = time.split(RegExp(r"[T,+]"));

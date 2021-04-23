@@ -330,7 +330,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                       IconButton(
                                         icon: Icon(Icons.chevron_right),
                                         onPressed: () {
-                                          Get.to(HumidityLog());
+                                          Get.to(() => HumidityLog());
                                         },
                                       )
                                     ],
@@ -382,7 +382,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                           IconButton(
                                             icon: Icon(Icons.chevron_right),
                                             onPressed: () {
-                                              Get.to(TemperatureLog());
+                                              Get.to(() => TemperatureLog());
                                             },
                                           )
                                         ],
@@ -441,7 +441,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                                           IconButton(
                                             icon: Icon(Icons.chevron_right),
                                             onPressed: () {
-                                              Get.to(SoilMoistureLog());
+                                              Get.to(() => SoilMoistureLog());
                                             },
                                           )
                                         ],
