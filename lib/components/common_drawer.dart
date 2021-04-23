@@ -46,13 +46,13 @@ class _CommonDrawerState extends State<CommonDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        height: Get.height,
+        height: Get.height * .9,
         child: ListView(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // NAVIGATIONS
             Container(
-              height: Get.height * .8,
+              height: (Get.height * .9) * .85,
               child: Column(
                 children: [
                   // USER BANNER
