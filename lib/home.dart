@@ -1,10 +1,6 @@
 import 'dart:async';
-<<<<<<< HEAD
 import 'package:agro_cloud/screens/soilMoistureLog.dart';
-=======
 import 'package:agro_cloud/components/custom_charts.dart';
-import 'package:agro_cloud/screens/soilMoisture.dart';
->>>>>>> 8c9a46a07704e3d3f3e0f25b18d76c5e366af3bb
 import 'package:agro_cloud/screens/temperatureLog.dart';
 import 'package:agro_cloud/screens/user.dart';
 import 'package:fl_chart/fl_chart.dart';

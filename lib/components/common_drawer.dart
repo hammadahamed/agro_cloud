@@ -1,7 +1,7 @@
 import 'package:agro_cloud/screens/controls.dart';
 import 'package:agro_cloud/screens/datasTable.dart';
 import 'package:agro_cloud/screens/humidityLog.dart';
-import 'package:agro_cloud/screens/soilMoisture.dart';
+import 'package:agro_cloud/screens/soilMoistureLog.dart';
 import 'package:agro_cloud/screens/temperatureLog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
