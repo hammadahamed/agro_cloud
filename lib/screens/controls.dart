@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
+import '../controller/feature_controller.dart';
 
 class Controls extends StatefulWidget {
   Controls({Key key}) : super(key: key);
@@ -18,10 +19,19 @@ class _ControlsState extends State<Controls> {
   GoogleSignIn googleSignIn = GoogleSignIn();
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
-  bool ledStatus1 = false;
+  FeatureController feature = Get.put(FeatureController());
+  bool ledStatus1;
   bool ledStatus2 = false;
   bool ledStatus3 = false;
   bool ledStatus4 = false;
+
+  @override
+  void initState()  {
+     feature.initializer();
+    
+    super.initState();
+  }
+
   isLive() {
     final re = fb.reference();
 
@@ -50,6 +60,7 @@ class _ControlsState extends State<Controls> {
 
   @override
   Widget build(BuildContext context) {
+    ledStatus1 = feature.controlSwitch1;
     final ref = fb.reference();
 
     return SafeArea(
@@ -156,6 +167,7 @@ class _ControlsState extends State<Controls> {
                           inactiveTextColor: Colors.blue[50],
                           value: ledStatus1,
                           onToggle: (value) {
+                            feature.initializer();
                             setState(() {
                               ledStatus1 = value;
                               if (ledStatus1) {
