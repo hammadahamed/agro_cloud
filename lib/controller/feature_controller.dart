@@ -6,7 +6,7 @@ class FeatureController extends GetxController {
   var fbref;
 
   ///inside widget build
-  Rx<bool> controlSwitch1;
+  var controlSwitch1 = true.obs;
   bool controlSwitch2;
   bool controlSwitch3;
   bool controlSwitch4;
@@ -16,8 +16,10 @@ class FeatureController extends GetxController {
   }
 
   initializer() async {
-    fbInitializer();
-    this.controlSwitch1 = await this.fbref.once().then((DataSnapshot snapshot) {
+    this.fbInitializer();
+    this.controlSwitch1.value =
+        await this.fbref.once().then((DataSnapshot snapshot) {
+      print("sanp value : ${snapshot.value["LED"]}");
       return snapshot.value["LED"] == 1 ? true : false;
     });
   }

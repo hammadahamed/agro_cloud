@@ -59,7 +59,7 @@ class _ControlsState extends State<Controls> {
 
   @override
   Widget build(BuildContext context) {
-    // ledStatus1 = feature.controlSwitch1;
+    ledStatus1 = feature.controlSwitch1.value;
     final ref = fb.reference();
 
     return SafeArea(
@@ -146,13 +146,13 @@ class _ControlsState extends State<Controls> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          width: 50,
-                          child: Text(
-                            "Switch 1\nPIN : 6 \n${feature.controlSwitch1}",
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                        Obx(() => Container(
+                              width: 50,
+                              child: Text(
+                                "Switch 1\nPIN : 6 \n${feature.controlSwitch1.value}",
+                                textAlign: TextAlign.center,
+                              ),
+                            )),
                         Obx(() => FlutterSwitch(
                               activeToggleColor: Colors.green,
                               activeColor: Colors.black12,
@@ -164,19 +164,15 @@ class _ControlsState extends State<Controls> {
                               showOnOff: true,
                               activeTextColor: Colors.black,
                               inactiveTextColor: Colors.blue[50],
-                              value: ledStatus1,
+                              value: feature.controlSwitch1.value,
                               onToggle: (value) {
-                                feature.initializer();
-                                setState(() {
-                                  ledStatus1 = feature.controlSwitch1.value
-                                      ? true
-                                      : false;
-                                  if (feature.controlSwitch1.value) {
-                                    ref.child("LED").set(1);
-                                  } else {
-                                    ref.child("LED").set(0);
-                                  }
-                                });
+                                feature.controlSwitch1.value = value;
+                                print("presse $value");
+                                if (feature.controlSwitch1.value) {
+                                  ref.child("LED").set(1);
+                                } else {
+                                  ref.child("LED").set(0);
+                                }
                               },
                             )),
                       ],
