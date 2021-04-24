@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 
 class SwitchController extends GetxController {
   var fb;
-  var fbref;
+  var fbRef;
 
   //inside widget build
-  var controlSwitch1 = true.obs;
-  bool controlSwitch2;
-  bool controlSwitch3;
-  bool controlSwitch4;
+  Rx<bool> controlSwitch1 = true.obs;
+  Rx<bool> controlSwitch2 = true.obs;
+  Rx<bool> controlSwitch3 = true.obs;
+  Rx<bool> controlSwitch4 = true.obs;
 
   @override
   void onInit() {
@@ -19,15 +19,26 @@ class SwitchController extends GetxController {
 
   fbInitializer() {
     this.fb = FirebaseDatabase.instance;
-    this.fbref = fb.reference();
+    this.fbRef = fb.reference();
   }
 
   initializer() async {
     this.fbInitializer();
     this.controlSwitch1.value =
-        await this.fbref.once().then((DataSnapshot snapshot) {
-      // print("sanp value : ${snapshot.value["LED"]}");
+        await this.fbRef.once().then((DataSnapshot snapshot) {
       return snapshot.value["LED"] == 1 ? true : false;
+    });
+    this.controlSwitch2.value =
+        await this.fbRef.once().then((DataSnapshot snapshot) {
+      return snapshot.value["S2"] == 1 ? true : false;
+    });
+    this.controlSwitch3.value =
+        await this.fbRef.once().then((DataSnapshot snapshot) {
+      return snapshot.value["S3"] == 1 ? true : false;
+    });
+    this.controlSwitch4.value =
+        await this.fbRef.once().then((DataSnapshot snapshot) {
+      return snapshot.value["S4"] == 1 ? true : false;
     });
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:agro_cloud/controller/auth_controller.dart';
+import 'package:agro_cloud/screens/controls.dart';
+import 'controller/switch_controller.dart';
 import 'package:agro_cloud/screens/soilMoistureLog.dart';
 import 'package:agro_cloud/components/custom_charts.dart';
 import 'package:agro_cloud/screens/temperatureLog.dart';
@@ -23,6 +25,7 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> with TickerProviderStateMixin {
   AuthController auth = Get.find();
+  SwitchController switcher = Get.find();
 
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
@@ -121,6 +124,14 @@ class _Home extends State<Home> with TickerProviderStateMixin {
         children: [child],
       ),
     );
+  }
+
+  Widget switchIcon(value) {
+    return Obx(() => Icon(
+          Icons.circle,
+          size: 14,
+          color: value ? Colors.green : Colors.grey,
+        ));
   }
 
   Timer timer;
@@ -466,29 +477,57 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                           ),
 
                           Container(
-                            margin: EdgeInsets.symmetric(horizontal: 12),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 10),
                             height: fourthPart,
-                            color: Colors.red,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text("SWITCH STATES"),
-                                  ],
-                                ),
-                              ],
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        "SWITCH  STATE",
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontFamily: "NunitoSans-semibold",
+                                            fontSize: 14),
+                                      ),
+                                      Container(
+                                        width: Get.width / 3,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            switchIcon(
+                                                switcher.controlSwitch1.value),
+                                            switchIcon(
+                                                switcher.controlSwitch2.value),
+                                            switchIcon(
+                                                switcher.controlSwitch3.value),
+                                            switchIcon(
+                                                switcher.controlSwitch4.value),
+                                          ],
+                                        ),
+                                      ),
+                                      IconButton(
+                                        splashColor: MyColors.primaryColor,
+                                        highlightColor: MyColors.primaryColor,
+                                        onPressed: () {
+                                          Get.to(() => Controls());
+                                        },
+                                        icon: Icon(
+                                          Icons.chevron_right_outlined,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           )
-
-                          // ElevatedButton(
-                          //   onPressed: () {
-                          //     Navigator.push(
-                          //         context,
-                          //         new MaterialPageRoute(
-                          //             builder: (context) => DatasTable()));
-                          //   },
-                          //   child: Text("All Data"),
-                          // ),
                         ],
                       ),
                     );

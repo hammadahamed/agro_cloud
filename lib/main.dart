@@ -16,7 +16,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final AuthController auth = Get.put(AuthController());
-  final SwitchController feature = Get.put(SwitchController());
+  final SwitchController switcher = Get.put(SwitchController());
 
   @override
   Widget build(BuildContext context) {

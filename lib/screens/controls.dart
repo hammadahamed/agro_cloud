@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:agro_cloud/components/common_drawer.dart';
@@ -14,8 +13,7 @@ class Controls extends StatefulWidget {
 }
 
 class _ControlsState extends State<Controls> {
-  SwitchController feature = Get.find();
-  final fb = FirebaseDatabase.instance;
+  SwitchController switcher = Get.find();
   // bool isLiveState = false;
   bool ledStatus1;
   bool ledStatus2 = false;
@@ -28,7 +26,7 @@ class _ControlsState extends State<Controls> {
   }
 
   // isLive() {
-  //   final re = fb.reference();
+  //   final re = fb.switcher.fbReference();
 
   //   re.child("TimeStamp").once().then((DataSnapshot data) {
   //     int diff = 0;
@@ -55,8 +53,8 @@ class _ControlsState extends State<Controls> {
 
   @override
   Widget build(BuildContext context) {
-    ledStatus1 = feature.controlSwitch1.value;
-    final ref = fb.reference();
+    ledStatus1 = switcher.controlSwitch1.value;
+    // final switcher.fbRef = fb.switcher.fbReference();
 
     return SafeArea(
         child: Scaffold(
@@ -160,13 +158,13 @@ class _ControlsState extends State<Controls> {
                               showOnOff: true,
                               activeTextColor: Colors.black,
                               inactiveTextColor: Colors.blue[50],
-                              value: feature.controlSwitch1.value,
+                              value: switcher.controlSwitch1.value,
                               onToggle: (value) {
-                                feature.controlSwitch1.value = value;
-                                if (feature.controlSwitch1.value) {
-                                  ref.child("LED").set(1);
+                                switcher.controlSwitch1.value = value;
+                                if (switcher.controlSwitch1.value) {
+                                  switcher.fbRef.child("LED").set(1);
                                 } else {
-                                  ref.child("LED").set(0);
+                                  switcher.fbRef.child("LED").set(0);
                                 }
                               },
                             )),
@@ -194,29 +192,27 @@ class _ControlsState extends State<Controls> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        FlutterSwitch(
-                          activeToggleColor: Colors.green,
-                          activeColor: Colors.black12,
-                          inactiveColor: Colors.black26,
-                          toggleSize: 20,
-                          valueFontSize: 15,
-                          width: 60,
-                          height: 25,
-                          showOnOff: true,
-                          activeTextColor: Colors.black,
-                          inactiveTextColor: Colors.blue[50],
-                          value: ledStatus2,
-                          onToggle: (value) {
-                            setState(() {
-                              ledStatus2 = value;
-                              if (ledStatus2) {
-                                ref.child("LED").set(1);
-                              } else {
-                                ref.child("LED").set(0);
-                              }
-                            });
-                          },
-                        ),
+                        Obx(() => FlutterSwitch(
+                              activeToggleColor: Colors.green,
+                              activeColor: Colors.black12,
+                              inactiveColor: Colors.black26,
+                              toggleSize: 20,
+                              valueFontSize: 15,
+                              width: 60,
+                              height: 25,
+                              showOnOff: true,
+                              activeTextColor: Colors.black,
+                              inactiveTextColor: Colors.blue[50],
+                              value: switcher.controlSwitch2.value,
+                              onToggle: (value) {
+                                switcher.controlSwitch2.value = value;
+                                if (switcher.controlSwitch2.value) {
+                                  switcher.fbRef.child("S2").set(1);
+                                } else {
+                                  switcher.fbRef.child("S2").set(0);
+                                }
+                              },
+                            )),
                       ],
                     ),
                   ),
@@ -251,29 +247,27 @@ class _ControlsState extends State<Controls> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        FlutterSwitch(
-                          activeToggleColor: Colors.green,
-                          activeColor: Colors.black12,
-                          inactiveColor: Colors.black26,
-                          toggleSize: 20,
-                          valueFontSize: 15,
-                          width: 60,
-                          height: 25,
-                          showOnOff: true,
-                          activeTextColor: Colors.black,
-                          inactiveTextColor: Colors.blue[50],
-                          value: ledStatus3,
-                          onToggle: (value) {
-                            setState(() {
-                              ledStatus3 = value;
-                              if (ledStatus3) {
-                                ref.child("LED").set(1);
-                              } else {
-                                ref.child("LED").set(0);
-                              }
-                            });
-                          },
-                        ),
+                        Obx(() => FlutterSwitch(
+                              activeToggleColor: Colors.green,
+                              activeColor: Colors.black12,
+                              inactiveColor: Colors.black26,
+                              toggleSize: 20,
+                              valueFontSize: 15,
+                              width: 60,
+                              height: 25,
+                              showOnOff: true,
+                              activeTextColor: Colors.black,
+                              inactiveTextColor: Colors.blue[50],
+                              value: switcher.controlSwitch3.value,
+                              onToggle: (value) {
+                                switcher.controlSwitch3.value = value;
+                                if (switcher.controlSwitch3.value) {
+                                  switcher.fbRef.child("S3").set(1);
+                                } else {
+                                  switcher.fbRef.child("S3").set(0);
+                                }
+                              },
+                            )),
                       ],
                     ),
                   ),
@@ -298,29 +292,27 @@ class _ControlsState extends State<Controls> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        FlutterSwitch(
-                          activeToggleColor: Colors.green,
-                          activeColor: Colors.black12,
-                          inactiveColor: Colors.black26,
-                          toggleSize: 20,
-                          valueFontSize: 15,
-                          width: 60,
-                          height: 25,
-                          showOnOff: true,
-                          activeTextColor: Colors.black,
-                          inactiveTextColor: Colors.blue[50],
-                          value: ledStatus4,
-                          onToggle: (value) {
-                            setState(() {
-                              ledStatus4 = value;
-                              if (ledStatus4) {
-                                ref.child("LED").set(1);
-                              } else {
-                                ref.child("LED").set(0);
-                              }
-                            });
-                          },
-                        ),
+                        Obx(() => FlutterSwitch(
+                              activeToggleColor: Colors.green,
+                              activeColor: Colors.black12,
+                              inactiveColor: Colors.black26,
+                              toggleSize: 20,
+                              valueFontSize: 15,
+                              width: 60,
+                              height: 25,
+                              showOnOff: true,
+                              activeTextColor: Colors.black,
+                              inactiveTextColor: Colors.blue[50],
+                              value: switcher.controlSwitch4.value,
+                              onToggle: (value) {
+                                switcher.controlSwitch4.value = value;
+                                if (switcher.controlSwitch4.value) {
+                                  switcher.fbRef.child("S4").set(1);
+                                } else {
+                                  switcher.fbRef.child("S4").set(0);
+                                }
+                              },
+                            )),
                       ],
                     ),
                   ),
