@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:agro_cloud/components/common_drawer.dart';
-import 'package:agro_cloud/components/custom_charts.dart';
+import 'package:agro_cloud/components/dummy_charts.dart';
 import 'package:agro_cloud/components/exportCSV.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
+import 'package:agro_cloud/controller/data_controller.dart';
 
 class TemperatureLog extends StatefulWidget {
   @override
@@ -18,83 +19,39 @@ class TemperatureLog extends StatefulWidget {
 
 class _TemperatureLogState extends State<TemperatureLog>
     with TickerProviderStateMixin {
+  DataController dataController = Get.find();
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
-  List<String> temperature = [];
-  List<String> time = [];
-  List<String> date = [];
-  List<String> dateTime = [];
-  List<DataRow> allRow = [];
-  bool isLoad = false;
 
-  allData() async {
-    isLoad = true;
-    time.clear();
-    temperature.clear();
-    DateTime frmt;
-    String t;
-    final ref = fb.reference();
-    await ref.child("DataArray").once().then((DataSnapshot data) {
-      data.value["DateTime"].forEach((key, value) => {
-            dateTime = value.split(RegExp(r"[T,+]")),
-            frmt = new DateFormat("yyyy-MM-dd HH:mm:ss")
-                .parse(dateTime[0] + " " + dateTime[1]),
-            t = new TimeOfDay(
-              hour: frmt.hour,
-              minute: frmt.minute,
-            ).format(context),
-            t = t.replaceFirst(" ", ":" + frmt.second.toString() + " "),
-            time.add(t),
-            date.add(dateTime[0])
-          });
+  // GENERATE ROWS
+  List<DataRow> getRows() {
+    dataController.isDataLoading.value = true;
+    print(">>>> cchange TRUE");
 
-      data.value["Temperature"].forEach((key, value) => {
-            temperature.add(value),
-          });
-    });
-
-    setState(() {
-      allRow.clear();
-    });
-
-//
-    for (var i = 0; i < time.length; i++) {
-      int j = i + 1;
-
-      allRow.add(
-        DataRow(
-          selected: i % 2 == 0 ? true : false,
-          cells: <DataCell>[
-            DataCell(Text("$j")),
-            DataCell(Text(date[i])),
-            DataCell(Text(time[i])),
-            DataCell(Text(temperature[i])),
-          ],
-        ),
+    List<DataRow> rows = [];
+    for (var i = 0; i < dataController.date.length; i++) {
+      var item = DataRow(
+        cells: <DataCell>[
+          DataCell(Text((i + 1).toString())),
+          DataCell(Text(dataController.date[i])),
+          DataCell(Text(dataController.time[i])),
+          DataCell(Text(dataController.temperature[i])),
+          // DataCell(Text("--")),
+        ],
       );
 
-      if (i == time.length - 1) {
-        setState(() {
-          allRow.add(
-            DataRow(
-              selected: i % 2 == 0 ? true : false,
-              cells: <DataCell>[
-                DataCell(Text("$j")),
-                DataCell(Text(date[i])),
-                DataCell(Text(time[i])),
-                DataCell(Text(temperature[i])),
-              ],
-            ),
-          );
-          isLoad = false;
-        });
-      }
+      rows.add(item);
     }
+    dataController.isDataLoading.value = false;
+    print(">>>> cchange FALSE");
+    return rows;
   }
 
-  isLive() {
+// ------- ALL DATA ---------------------------------
+
+  isLive() async {
     final re = fb.reference();
-    re.child("TimeStamp").once().then((DataSnapshot data) {
+    await re.child("TimeStamp").once().then((DataSnapshot data) {
       int diff = 0;
       String time = data.value;
       List<String> splitted = time.split(RegExp(r"[T,+]"));
@@ -115,271 +72,276 @@ class _TemperatureLogState extends State<TemperatureLog>
     });
   }
 
+  Timer timer;
   @override
   void initState() {
-    allData();
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
       isLive();
     });
     super.initState();
   }
 
   @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
-    return Scaffold(
-      drawer: CommonDrawer(),
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: MyColors.primaryColor),
-        title: Text(
-          "Temperature Logs",
-          style: TextStyle(
-            fontFamily: "NunitoSans-semibold",
-            color: Get.isDarkMode ? Colors.white : MyColors.primaryColor,
-          ),
-        ),
-        backgroundColor: Get.isDarkMode ? null : Colors.white,
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                tooltip: "Download Data",
-                icon: Icon(Icons.launch_rounded),
-                onPressed: () {
-                  showDialog<void>(
-                    context: context,
-                    barrierDismissible: false, // user must tap button!
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Export Data!'),
-                        content: SingleChildScrollView(
-                          child: ListBody(
-                            children: <Widget>[
-                              Text(
-                                  'Are you sure want to Export All the Data from the Temperature Table?'),
-                              // Text(
-                              //     'Would you like to approve of this message?'),
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('Yes'),
-                            onPressed: () {
-                              temperatureCsv(date, time, temperature);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            child: Text('No'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-              IconButton(
-                tooltip: "Refresh",
-                icon: Icon(Icons.refresh),
-                onPressed: () {
-                  allData();
-                },
-              ),
-            ],
-          )
-        ],
-      ),
-      body: Container(
-        height: Get.height,
-        width: Get.width,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
+
+    List<dynamic> date = dataController.date;
+    List<dynamic> time = dataController.time;
+    List<dynamic> temperature = dataController.temperature;
+
+    return SafeArea(
+      child: Scaffold(
+        drawer: CommonDrawer(),
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: MyColors.primaryColor),
+          title: Text(
+            "Temperature Logs",
+            style: TextStyle(
+              fontFamily: "NunitoSans-semibold",
+              color: Get.isDarkMode ? Colors.white : MyColors.primaryColor,
             ),
-            // First HALF
+          ),
+          backgroundColor: Get.isDarkMode ? null : Colors.white,
+          actions: [
             Row(
               children: [
-                SizedBox(
-                  width: 15,
-                ),
-                Hero(
-                  tag: "HumIcon",
-                  child: SvgPicture.asset(
-                    'assets/icons/thermometer.svg',
-                    height: 30,
-                  ),
-                ),
-                Text("Temperature"),
-                SizedBox(width: 100),
-                Container(
-                  width: Get.width / 3,
-                  child: isLiveState
-                      ? Row(
-                          children: [
-                            FadeTransition(
-                              opacity: CurvedAnimation(
-                                  parent: AnimationController(
-                                    duration: Duration(milliseconds: 750),
-                                    vsync: this,
-                                  )..repeat(
-                                      reverse: true,
-                                      period: Duration(
-                                        milliseconds: 1500,
-                                      ),
-                                    ),
-                                  curve: Curves.easeIn),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.green,
-                                    maxRadius: 5,
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    "Live",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                IconButton(
+                  tooltip: "Download Data",
+                  icon: Icon(Icons.launch_rounded),
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Export Data!'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Text(
+                                    'Are you sure want to Export All the Data from the Temperature Table?'),
+                                // Text(
+                                //     'Would you like to approve of this message?'),
+                              ],
                             ),
-                            SizedBox(width: 4),
-                            StreamBuilder(
-                                stream: ref.onValue,
-                                builder: (context, snap) {
-                                  return snap.data == null
-                                      ? Center(
-                                          child: SpinKitDoubleBounce(
-                                          color: MyColors.primaryColor,
-                                          size: 50.0,
-                                        ))
-                                      : Text(snap.data.snapshot
-                                          .value["DHT11Temperature"]);
-                                })
-                          ],
-                        )
-                      : Container(
-                          child: Row(
-                            children: [
-                              Spacer(),
-                              CircleAvatar(
-                                backgroundColor: Colors.red,
-                                maxRadius: 5,
-                              ),
-                              Text(
-                                "Disconnected",
-                                style: TextStyle(
-                                    fontFamily: "NunitoSans-regular",
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Spacer(),
-                            ],
                           ),
-                        ),
-                )
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('Yes'),
+                              onPressed: () {
+                                temperatureCsv(date, time, temperature);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text('No'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+                IconButton(
+                  tooltip: "Refresh",
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    setState(() {
+                      dataController.getData();
+                    });
+                  },
+                ),
               ],
-            ),
-            // SECOND HALF
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              color: MyColors.primaryColor,
-              height: Get.height * .3,
-              child: CustomCharts( chartHumidity:temperature,
-                  chartTime: time),
-            ),
-            // THIRD HALF
-            Container(
-              height: Get.height * .45,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
+            )
+          ],
+        ),
+        body: Container(
+          height: Get.height,
+          width: Get.width,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              // First HALF
+              Row(
+                children: [
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Hero(
+                    tag: "HumIcon",
+                    child: SvgPicture.asset(
+                      'assets/icons/thermometer.svg',
+                      height: 30,
+                    ),
+                  ),
+                  Text("Temperature"),
+                  SizedBox(width: 130),
+                  Container(
+                    width: Get.width / 3,
+                    child: isLiveState
+                        ? Row(
+                            children: [
+                              FadeTransition(
+                                opacity: CurvedAnimation(
+                                    parent: AnimationController(
+                                      duration:
+                                          const Duration(milliseconds: 750),
+                                      vsync: this,
+                                    )..repeat(reverse: true),
+                                    curve: Curves.easeIn),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: Colors.green,
+                                      maxRadius: 5,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      "Live",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 4),
+                              StreamBuilder(
+                                  stream: ref.onValue,
+                                  builder: (context, snap) {
+                                    return snap.data == null
+                                        ? Center(
+                                            child: SpinKitDoubleBounce(
+                                            color: MyColors.primaryColor,
+                                            size: 50.0,
+                                          ))
+                                        : Text(snap.data.snapshot
+                                            .value["DHT11Temperature"]);
+                                  })
+                            ],
+                          )
+                        : Container(
+                            child: Row(
+                              children: [
+                                Spacer(),
+                                CircleAvatar(
+                                  backgroundColor: Colors.red,
+                                  maxRadius: 5,
+                                ),
+                                Text(
+                                  "Disconnected",
+                                  style: TextStyle(
+                                      fontFamily: "NunitoSans-regular",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
+                  )
+                ],
+              ),
+              // SECOND HALF
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                color: MyColors.primaryColor,
+                height: Get.height * .3,
+                child: DummyCharts(),
+              ),
+              // THIRD HALF
+              Container(
+                height: Get.height * .45,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                      showBottomBorder: true,
-                      columnSpacing: 15,
-                      columns: <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            "S. No.\n(" + time.length.toString() + ")",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                  child: SingleChildScrollView(
+                    child: Obx(() => DataTable(
+                        columnSpacing: 15,
+                        columns: <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'S. No. \n(' +
+                                  dataController.time.length.toString() +
+                                  ")",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Date',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          DataColumn(
+                            label: Text(
+                              'Date',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Time',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          DataColumn(
+                            label: Text(
+                              'Time',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Temperature',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          DataColumn(
+                            label: Text(
+                              'Temperature',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                      ],
-                      dividerThickness: isLoad ? 0 : 1,
-                      rows: !isLoad
-                          ? allRow
-                          : [
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(
-                                    Text(""),
-                                  ),
-                                  DataCell(
-                                    Text(""),
-                                  ),
-                                  DataCell(Text("")),
-                                  DataCell(Text("")),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text("")),
-                                  DataCell(Text("")),
-                                  DataCell(Text("")),
-                                  DataCell(Text("")),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text("")),
-                                  DataCell(Center(
-                                    child: SpinKitDoubleBounce(
-                                      color: MyColors.primaryColor,
-                                      size: 50.0,
-                                    ),
-                                  )),
-                                  DataCell(Text("")),
-                                  DataCell(
-                                    Text(""),
-                                  ),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text("")),
-                                  DataCell(Text("")),
-                                  DataCell(Text("")),
-                                  DataCell(Text("")),
-                                ],
-                              ),
-                            ]),
+                        ],
+                        dividerThickness:
+                            dataController.isDataLoading.value ? 0 : 1,
+                        rows: dataController.isDataLoading.value
+                            ? [
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                  ],
+                                ),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                  ],
+                                ),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Center(
+                                      child: SpinKitDoubleBounce(
+                                        color: MyColors.primaryColor,
+                                        size: 50.0,
+                                      ),
+                                    )),
+                                    DataCell(Text("--")),
+                                  ],
+                                ),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                  ],
+                                ),
+                              ]
+                            : getRows())),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
