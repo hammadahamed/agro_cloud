@@ -27,11 +27,11 @@ class _HumidityLogState extends State<HumidityLog>
   List<DataRow> dataRows;
   List<DataRow> allRow = [];
 
-  // bool allDataLoading = false;
+  bool allDataLoading = false;
 
 // ------- ALL DATA ---------------------------------
   allData() async {
-    // allDataLoading = true;
+    allDataLoading = true;
     time.clear();
 
     humidity.clear();
@@ -83,7 +83,7 @@ class _HumidityLogState extends State<HumidityLog>
         );
       }
     }
-    // allDataLoading = true;
+    allDataLoading = true;
 
     return allRow;
   }
@@ -304,6 +304,7 @@ class _HumidityLogState extends State<HumidityLog>
                       future: allData(),
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> snapshot) {
+                        // snapshot.
                         return DataTable(
                             columnSpacing: 15,
                             columns: <DataColumn>[
@@ -333,8 +334,9 @@ class _HumidityLogState extends State<HumidityLog>
                               ),
                             ],
                             dividerThickness: !snapshot.hasData ? 0 : 1,
-                            rows: snapshot.data == null
-                                ? [
+                            rows: allDataLoading
+                                ? snapshot.data
+                                : [
                                     DataRow(
                                       cells: <DataCell>[
                                         DataCell(Text("--")),
@@ -372,8 +374,7 @@ class _HumidityLogState extends State<HumidityLog>
                                         DataCell(Text("--")),
                                       ],
                                     ),
-                                  ]
-                                : snapshot.data);
+                                  ]);
                       },
                     ),
                   ),
