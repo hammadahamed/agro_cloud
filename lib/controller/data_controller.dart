@@ -26,6 +26,7 @@ class DataController extends GetxController {
     this.fbRef = fb.reference();
   }
 
+  var numberOfValues = 50;
   // DATA FETCHER ----------------->
   getData() async {
     isDataLoading.value = true;
@@ -35,7 +36,7 @@ class DataController extends GetxController {
     temperature.clear();
     allRow.clear();
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
     await fbRef.child("allData").once().then((DataSnapshot data) {
       print(">>>>>>>>>>>>>>>>>>> snapshot data :  $data");
       print(">>>>>>>>>>>>>>>>>>> snapshot data.value :  ${data.value.length}");
@@ -43,7 +44,7 @@ class DataController extends GetxController {
       var i = 0;
       data.value.forEach((key, value) {
         // print("-----------> inside loop data :  $value");
-        if (i < length - 20) {
+        if (i < length - numberOfValues) {
           i++;
         } else {
           var temp = value.split("@");
