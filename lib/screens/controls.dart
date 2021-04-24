@@ -16,19 +16,18 @@ class Controls extends StatefulWidget {
 }
 
 class _ControlsState extends State<Controls> {
+  FeatureController feature = Get.find();
   GoogleSignIn googleSignIn = GoogleSignIn();
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
-  FeatureController feature = Get.put(FeatureController());
   bool ledStatus1;
   bool ledStatus2 = false;
   bool ledStatus3 = false;
   bool ledStatus4 = false;
 
   @override
-  void initState()  {
-     feature.initializer();
-    
+  void initState() {
+    feature.initializer();
     super.initState();
   }
 
@@ -60,7 +59,7 @@ class _ControlsState extends State<Controls> {
 
   @override
   Widget build(BuildContext context) {
-    ledStatus1 = feature.controlSwitch1;
+    // ledStatus1 = feature.controlSwitch1;
     final ref = fb.reference();
 
     return SafeArea(
@@ -150,34 +149,36 @@ class _ControlsState extends State<Controls> {
                         Container(
                           width: 50,
                           child: Text(
-                            "Switch 1\nPIN : 6",
+                            "Switch 1\nPIN : 6 \n${feature.controlSwitch1}",
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        FlutterSwitch(
-                          activeToggleColor: Colors.green,
-                          activeColor: Colors.black12,
-                          inactiveColor: Colors.black26,
-                          toggleSize: 20,
-                          valueFontSize: 15,
-                          width: 60,
-                          height: 25,
-                          showOnOff: true,
-                          activeTextColor: Colors.black,
-                          inactiveTextColor: Colors.blue[50],
-                          value: ledStatus1,
-                          onToggle: (value) {
-                            feature.initializer();
-                            setState(() {
-                              ledStatus1 = value;
-                              if (ledStatus1) {
-                                ref.child("LED").set(1);
-                              } else {
-                                ref.child("LED").set(0);
-                              }
-                            });
-                          },
-                        ),
+                        Obx(() => FlutterSwitch(
+                              activeToggleColor: Colors.green,
+                              activeColor: Colors.black12,
+                              inactiveColor: Colors.black26,
+                              toggleSize: 20,
+                              valueFontSize: 15,
+                              width: 60,
+                              height: 25,
+                              showOnOff: true,
+                              activeTextColor: Colors.black,
+                              inactiveTextColor: Colors.blue[50],
+                              value: ledStatus1,
+                              onToggle: (value) {
+                                feature.initializer();
+                                setState(() {
+                                  ledStatus1 = feature.controlSwitch1.value
+                                      ? true
+                                      : false;
+                                  if (feature.controlSwitch1.value) {
+                                    ref.child("LED").set(1);
+                                  } else {
+                                    ref.child("LED").set(0);
+                                  }
+                                });
+                              },
+                            )),
                       ],
                     ),
                   ),

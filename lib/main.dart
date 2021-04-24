@@ -1,4 +1,5 @@
 import 'package:agro_cloud/controller/auth_controller.dart';
+import 'package:agro_cloud/controller/feature_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'screens/login.dart';
@@ -15,6 +16,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final AuthController auth = Get.put(AuthController());
+  final FeatureController feature = Get.put(FeatureController());
 
   @override
   Widget build(BuildContext context) {

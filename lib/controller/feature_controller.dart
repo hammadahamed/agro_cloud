@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class FeatureController extends GetxController {
@@ -7,7 +6,7 @@ class FeatureController extends GetxController {
   var fbref;
 
   ///inside widget build
-  bool controlSwitch1;
+  Rx<bool> controlSwitch1;
   bool controlSwitch2;
   bool controlSwitch3;
   bool controlSwitch4;
@@ -19,7 +18,7 @@ class FeatureController extends GetxController {
   initializer() async {
     fbInitializer();
     this.controlSwitch1 = await this.fbref.once().then((DataSnapshot snapshot) {
-      return snapshot.value["LED"]==1?true:false;
+      return snapshot.value["LED"] == 1 ? true : false;
     });
   }
 }
