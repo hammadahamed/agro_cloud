@@ -201,7 +201,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                         children: <Widget>[
 // FIRST SECTION
                           // CHART
-                          CustomCharts(),
+                          // CustomCharts(),
 // SECOND SECTION
                           // MODULE CONNECTION STATUS
                           Padding(
