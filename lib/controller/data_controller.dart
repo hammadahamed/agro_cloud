@@ -5,11 +5,15 @@ class DataController extends GetxController {
   var fb;
   var fbRef;
 
-  var date = [].obs;
-  var time = [].obs;
-  var humidity = [].obs;
-  var temperature = [].obs;
-  var allRow = [].obs;
+  List<String> date = [];
+  List<String> time = [];
+  List<String> humidity = [];
+  List<String> temperature = [];
+  var allRow = [];
+
+  get getdate => this.date;
+
+  var isDataLoading = false.obs;
 
 // init methods is this
   void onInit() {
@@ -22,23 +26,43 @@ class DataController extends GetxController {
     this.fbRef = fb.reference();
   }
 
+  // DATA FETCHER ----------------->
   getData() async {
+    isDataLoading.value = true;
+    date.clear();
     time.clear();
     humidity.clear();
+    temperature.clear();
     allRow.clear();
 
+    // await Future.delayed(Duration(seconds: 5));
     await fbRef.child("allData").once().then((DataSnapshot data) {
       print(">>>>>>>>>>>>>>>>>>> snapshot data :  $data");
-      print(">>>>>>>>>>>>>>>>>>> snapshot data.value :  ${data.value}");
-      for (var i = 0; i < data.value.length; i++) {
-        print("-----------> inside loop data :  ${data.value[i]}");
+      print(">>>>>>>>>>>>>>>>>>> snapshot data.value :  ${data.value.length}");
+      var length = data.value.length;
+      var i = 0;
+      data.value.forEach((key, value) {
+        // print("-----------> inside loop data :  $value");
+        if (i < length - 20) {
+          i++;
+        } else {
+          var temp = value.split("@");
+          print(temp);
+          this.date.add(temp[0]);
+          this.time.add(temp[1]);
+          this.humidity.add(temp[2]);
+          this.temperature.add(temp[3]);
 
-        var temp = data.value[i].split("@");
-        this.date.add(temp[0]);
-        this.time.add(temp[1]);
-        this.humidity.add(temp[2]);
-        this.temperature.add(temp[3]);
-      }
+          i++;
+        }
+      });
     });
+
+    print(">>>> (${date.length}) - date \n>>> $date");
+    print(">>>> (${time.length}) - time \n>>> $time");
+    print(">>>> (${humidity.length}) - humidity \n>>> $humidity");
+    print(">>>> (${temperature.length}) - temperature \n>>> $temperature");
+
+    isDataLoading.value = false;
   }
 }

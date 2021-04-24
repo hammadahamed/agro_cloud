@@ -7,6 +7,7 @@ import 'splash.dart';
 import 'package:agro_cloud/home.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:agro_cloud/controller/data_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final AuthController auth = Get.put(AuthController());
   final SwitchController switcher = Get.put(SwitchController());
+  final DataController dataController = Get.put(DataController());
 
   @override
   Widget build(BuildContext context) {

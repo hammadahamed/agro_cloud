@@ -9,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
+import 'package:agro_cloud/controller/data_controller.dart';
 
 class HumidityLog extends StatefulWidget {
   @override
@@ -17,76 +18,13 @@ class HumidityLog extends StatefulWidget {
 
 class _HumidityLogState extends State<HumidityLog>
     with TickerProviderStateMixin {
+  DataController dataController = Get.find();
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
-  List<String> humidity = [];
-  List<String> time = [];
-  List<String> date = [];
-  List<String> dateTime = [];
-
-  List<DataRow> dataRows;
-  List<DataRow> allRow = [];
 
   // bool allDataLoading = false;
 
 // ------- ALL DATA ---------------------------------
-  allData() async {
-    // allDataLoading = true;
-    time.clear();
-
-    humidity.clear();
-    allRow.clear();
-    DateTime frmt;
-    String t;
-    final ref = fb.reference();
-
-    await ref.child("DataArray").once().then((DataSnapshot data) {
-      print("--------------------- DATA ----------------------");
-      // print(data.toString());
-      print("--------------------- DATA ----------------------");
-
-      // DATE
-      data.value["DateTime"].forEach((key, value) => {
-            dateTime = value.split(RegExp(r"[T,+]")),
-            frmt = new DateFormat("yyyy-MM-dd HH:mm:ss")
-                .parse(dateTime[0] + " " + dateTime[1]),
-            t = new TimeOfDay(
-              hour: frmt.hour,
-              minute: frmt.minute,
-            ).format(context),
-            t = t.replaceFirst(" ", ":" + frmt.second.toString() + " "),
-            time.add(t),
-            date.add(dateTime[0])
-          });
-      print("humidity");
-      print(data.value["Humidity"]);
-
-      data.value["Humidity"].forEach((key, value) => {
-            humidity.add(value),
-          });
-    });
-
-    for (var i = 0; i < time.length; i++) {
-      int j = i + 1;
-
-      if (i > time.length - 50 && i < time.length) {
-        allRow.add(
-          DataRow(
-            selected: i % 2 == 0 ? true : false,
-            cells: <DataCell>[
-              DataCell(Text("$j")),
-              DataCell(Text(date[i])),
-              DataCell(Text(time[i])),
-              DataCell(Text(humidity[i])),
-            ],
-          ),
-        );
-      }
-    }
-    // allDataLoading = true;
-
-    return allRow;
-  }
 
   isLive() async {
     final re = fb.reference();
@@ -129,6 +67,10 @@ class _HumidityLogState extends State<HumidityLog>
     timer = Timer.periodic(Duration(seconds: 5), (timer) {
       isLive();
     });
+
+    List<dynamic> date = dataController.date;
+    List<dynamic> time = dataController.time;
+    List<dynamic> humidity = dataController.humidity;
 
     return SafeArea(
       child: Scaffold(
@@ -191,7 +133,7 @@ class _HumidityLogState extends State<HumidityLog>
                     icon: Icon(Icons.refresh),
                     onPressed: () {
                       setState(() {
-                        allData();
+                        dataController.getData();
                       });
                     }),
               ],
@@ -292,7 +234,10 @@ class _HumidityLogState extends State<HumidityLog>
                 margin: EdgeInsets.only(top: 10),
                 color: MyColors.primaryColor,
                 height: Get.height * .3,
-                child: CustomCharts(chartHumidity: humidity,chartTime: time,),
+                child: CustomCharts(
+                  chartHumidity: humidity,
+                  chartTime: time,
+                ),
               ),
               // THIRD HALF
               Container(
@@ -300,82 +245,77 @@ class _HumidityLogState extends State<HumidityLog>
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SingleChildScrollView(
-                    child: FutureBuilder(
-                      future: allData(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<dynamic> snapshot) {
-                        return DataTable(
-                            columnSpacing: 15,
-                            columns: <DataColumn>[
-                              DataColumn(
-                                label: Text(
-                                  'S. No. \n(' + time.length.toString() + ")",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                    child: DataTable(
+                        columnSpacing: 15,
+                        columns: <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'S. No. \n(' + time.length.toString() + ")",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Date',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Time',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Humidity',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                        dividerThickness:
+                            dataController.isDataLoading.value ? 0 : 1,
+                        rows: !dataController.isDataLoading.value
+                            ? [
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                  ],
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Date',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                  ],
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Time',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Center(
+                                      child: SpinKitDoubleBounce(
+                                        color: MyColors.primaryColor,
+                                        size: 50.0,
+                                      ),
+                                    )),
+                                    DataCell(Text("--")),
+                                  ],
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Humidity',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                    DataCell(Text("--")),
+                                  ],
                                 ),
-                              ),
-                            ],
-                            dividerThickness: !snapshot.hasData ? 0 : 1,
-                            rows: snapshot.data == null
-                                ? [
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                      ],
-                                    ),
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                      ],
-                                    ),
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                        DataCell(Center(
-                                          child: SpinKitDoubleBounce(
-                                            color: MyColors.primaryColor,
-                                            size: 50.0,
-                                          ),
-                                        )),
-                                        DataCell(Text("--")),
-                                      ],
-                                    ),
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                        DataCell(Text("--")),
-                                      ],
-                                    ),
-                                  ]
-                                : snapshot.data);
-                      },
-                    ),
+                              ]
+                            : []),
                   ),
                 ),
               ),

@@ -3,7 +3,7 @@ import 'package:agro_cloud/controller/auth_controller.dart';
 import 'package:agro_cloud/screens/controls.dart';
 import 'controller/switch_controller.dart';
 import 'package:agro_cloud/screens/soilMoistureLog.dart';
-import 'package:agro_cloud/components/custom_charts.dart';
+import 'package:agro_cloud/components/dummy_charts.dart';
 import 'package:agro_cloud/screens/temperatureLog.dart';
 import 'package:agro_cloud/screens/user.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -127,11 +127,11 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget switchIcon(value) {
-    return Obx(() => Icon(
-          Icons.circle,
-          size: 14,
-          color: value ? Colors.green : Colors.grey,
-        ));
+    return Icon(
+      Icons.circle,
+      size: 14,
+      color: value ? Colors.green : Colors.grey,
+    );
   }
 
   Timer timer;
@@ -213,6 +213,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 // FIRST SECTION
                           // CHART
                           // CustomCharts(),
+                          DummyCharts(),
 // SECOND SECTION
                           // MODULE CONNECTION STATUS
                           Padding(

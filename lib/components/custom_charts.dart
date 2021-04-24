@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 
 class CustomCharts extends StatefulWidget {
   final double firstPart;
-  final List<String> chartHumidity;
-  final List<String> chartTime;
-  
+  final chartHumidity;
+  final chartTime;
+
   CustomCharts({Key key, this.firstPart, this.chartHumidity, this.chartTime})
       : super(key: key);
 
@@ -18,7 +18,7 @@ class CustomCharts extends StatefulWidget {
 class _CustomChartsState extends State<CustomCharts> {
   List<String> chartDataHumidity = [];
   List<String> chartDataTime = [];
-bool isLoad=true;
+  bool isLoad = true;
   @override
   void initState() {
     setState(() {

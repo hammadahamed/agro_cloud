@@ -4,6 +4,7 @@ import 'package:agro_cloud/components/common_drawer.dart';
 import 'package:get/get.dart';
 import 'package:agro_cloud/utils.Dart';
 import '../controller/switch_controller.dart';
+import 'package:agro_cloud/controller/data_controller.dart';
 
 class Controls extends StatefulWidget {
   Controls({Key key}) : super(key: key);
@@ -14,6 +15,7 @@ class Controls extends StatefulWidget {
 
 class _ControlsState extends State<Controls> {
   SwitchController switcher = Get.find();
+  DataController dataController = Get.find();
   // bool isLiveState = false;
   bool ledStatus1;
   bool ledStatus2 = false;
@@ -319,6 +321,13 @@ class _ControlsState extends State<Controls> {
                 ),
               ],
             ),
+            Obx(() => dataController.isDataLoading.value
+                ? CircularProgressIndicator()
+                : IconButton(
+                    icon: Icon(Icons.ac_unit_outlined),
+                    onPressed: () {
+                      dataController.getData();
+                    })),
             Spacer(),
             // SizedBox(height: Get.height * .2)
           ],
