@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:agro_cloud/components/common_drawer.dart';
-import 'package:agro_cloud/components/custom_charts.dart';
+import 'package:agro_cloud/components/dummy_charts.dart';
 import 'package:agro_cloud/components/exportCSV.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -252,15 +252,12 @@ class _TemperatureLogState extends State<TemperatureLog>
                 ],
               ),
               // SECOND HALF
-              // Container(
-              //   margin: EdgeInsets.only(top: 10),
-              //   color: MyColors.primaryColor,
-              //   height: Get.height * .3,
-              //   child: CustomCharts(
-              //     chartHumidity: temperature,
-              //     chartTime: time,
-              //   ),
-              // ),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                color: MyColors.primaryColor,
+                height: Get.height * .3,
+                child: DummyCharts(),
+              ),
               // THIRD HALF
               Container(
                 height: Get.height * .45,
