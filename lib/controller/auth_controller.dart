@@ -16,7 +16,7 @@ class AuthController extends GetxController {
           "--------------- autController/google signin caller-----------------------");
       print(userData);
       this.userObj = userData;
-      Get.off(() => Home());
+      Get.offAll(() => Home());
     }).catchError((e) {
       print(
           "\n--------------- autController/google signin ERROR-----------------------");

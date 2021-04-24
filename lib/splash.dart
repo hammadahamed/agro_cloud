@@ -21,10 +21,9 @@ class _SplashState extends State<Splash> {
     if (signIn) {
       auth.userObj = await auth.googleSignIn.signInSilently();
       print("----------------------------> user obj : >> $userObj");
-
-      Get.to(() => Home());
+      Get.offAll(() => Home());
     } else {
-      Get.to(() => Login());
+      Get.offAll(() => Login());
     }
   }
 
