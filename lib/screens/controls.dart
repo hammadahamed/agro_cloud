@@ -167,7 +167,6 @@ class _ControlsState extends State<Controls> {
                               value: feature.controlSwitch1.value,
                               onToggle: (value) {
                                 feature.controlSwitch1.value = value;
-                                print("presse $value");
                                 if (feature.controlSwitch1.value) {
                                   ref.child("LED").set(1);
                                 } else {

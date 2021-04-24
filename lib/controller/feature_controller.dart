@@ -19,7 +19,7 @@ class FeatureController extends GetxController {
     this.fbInitializer();
     this.controlSwitch1.value =
         await this.fbref.once().then((DataSnapshot snapshot) {
-      print("sanp value : ${snapshot.value["LED"]}");
+      // print("sanp value : ${snapshot.value["LED"]}");
       return snapshot.value["LED"] == 1 ? true : false;
     });
   }
