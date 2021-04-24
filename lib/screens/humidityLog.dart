@@ -22,7 +22,7 @@ class _HumidityLogState extends State<HumidityLog>
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
 
-  // bool allDataLoading = false;
+  bool allDataLoading = false;
 
 // ------- ALL DATA ---------------------------------
 
