@@ -292,7 +292,7 @@ class _HumidityLogState extends State<HumidityLog>
                 margin: EdgeInsets.only(top: 10),
                 color: MyColors.primaryColor,
                 height: Get.height * .3,
-                child: CustomCharts(),
+                child: CustomCharts(chartHumidity: humidity,chartTime: time,),
               ),
               // THIRD HALF
               Container(
