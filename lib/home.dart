@@ -32,6 +32,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   Orientation mode;
   double thirdPart;
+  double fourthPart;
 
   bool isShowingMainData;
 
@@ -129,7 +130,10 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
     mode = MediaQuery.of(context).orientation;
 
+    // FIRST PART height = Get.height * .4
     thirdPart = mode == Orientation.landscape ? Get.height : Get.height * .3;
+    fourthPart =
+        mode == Orientation.landscape ? Get.height * .5 : Get.height * .1;
 
     return SafeArea(
       child: Scaffold(
@@ -460,6 +464,21 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                               ],
                             ),
                           ),
+
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 12),
+                            height: fourthPart,
+                            color: Colors.red,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("SWITCH STATES"),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
 
                           // ElevatedButton(
                           //   onPressed: () {

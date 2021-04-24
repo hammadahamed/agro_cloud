@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:agro_cloud/components/common_drawer.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
-import '../controller/feature_controller.dart';
+import '../controller/switch_controller.dart';
 
 class Controls extends StatefulWidget {
   Controls({Key key}) : super(key: key);
@@ -16,10 +14,9 @@ class Controls extends StatefulWidget {
 }
 
 class _ControlsState extends State<Controls> {
-  FeatureController feature = Get.find();
-  GoogleSignIn googleSignIn = GoogleSignIn();
+  SwitchController feature = Get.find();
   final fb = FirebaseDatabase.instance;
-  bool isLiveState = false;
+  // bool isLiveState = false;
   bool ledStatus1;
   bool ledStatus2 = false;
   bool ledStatus3 = false;
@@ -27,35 +24,34 @@ class _ControlsState extends State<Controls> {
 
   @override
   void initState() {
-    feature.initializer();
     super.initState();
   }
 
-  isLive() {
-    final re = fb.reference();
+  // isLive() {
+  //   final re = fb.reference();
 
-    re.child("TimeStamp").once().then((DataSnapshot data) {
-      int diff = 0;
-      String time = data.value;
-      List<String> splitted = time.split(RegExp(r"[T,+]"));
+  //   re.child("TimeStamp").once().then((DataSnapshot data) {
+  //     int diff = 0;
+  //     String time = data.value;
+  //     List<String> splitted = time.split(RegExp(r"[T,+]"));
 
-      String currTime =
-          new DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+  //     String currTime =
+  //         new DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
-      DateTime nowTime = DateTime.parse(currTime);
-      DateTime lastTime = DateTime.parse(splitted[0] + ' ' + splitted[1]);
-      diff = nowTime.difference(lastTime).inSeconds;
+  //     DateTime nowTime = DateTime.parse(currTime);
+  //     DateTime lastTime = DateTime.parse(splitted[0] + ' ' + splitted[1]);
+  //     diff = nowTime.difference(lastTime).inSeconds;
 
-      if (diff > 8) {
-        setState(() {
-          isLiveState = false;
-        });
-      } else
-        setState(() {
-          isLiveState = true;
-        });
-    });
-  }
+  //     if (diff > 8) {
+  //       setState(() {
+  //         isLiveState = false;
+  //       });
+  //     } else
+  //       setState(() {
+  //         isLiveState = true;
+  //       });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -146,13 +142,13 @@ class _ControlsState extends State<Controls> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Obx(() => Container(
-                              width: 50,
-                              child: Text(
-                                "Switch 1\nPIN : 6 \n${feature.controlSwitch1.value}",
-                                textAlign: TextAlign.center,
-                              ),
-                            )),
+                        Container(
+                          width: 50,
+                          child: Text(
+                            "Switch 1\nPIN : 6",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                         Obx(() => FlutterSwitch(
                               activeToggleColor: Colors.green,
                               activeColor: Colors.black12,
