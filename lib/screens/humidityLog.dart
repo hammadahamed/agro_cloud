@@ -22,14 +22,12 @@ class _HumidityLogState extends State<HumidityLog>
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
 
-  bool allDataLoading = false;
-
+  // GENERATE ROWS
   List<DataRow> getRows() {
     dataController.isDataLoading.value = true;
     print(">>>> cchange TRUE");
 
     List<DataRow> rows = [];
-
     for (var i = 0; i < dataController.date.length; i++) {
       var item = DataRow(
         cells: <DataCell>[
@@ -76,6 +74,9 @@ class _HumidityLogState extends State<HumidityLog>
   Timer timer;
   @override
   void initState() {
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      isLive();
+    });
     super.initState();
   }
 
@@ -88,9 +89,6 @@ class _HumidityLogState extends State<HumidityLog>
   @override
   Widget build(BuildContext context) {
     final ref = fb.reference();
-    timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      isLive();
-    });
 
     List<dynamic> date = dataController.date;
     List<dynamic> time = dataController.time;
@@ -153,13 +151,14 @@ class _HumidityLogState extends State<HumidityLog>
                   },
                 ),
                 IconButton(
-                    tooltip: "Refresh",
-                    icon: Icon(Icons.refresh),
-                    onPressed: () {
-                      setState(() {
-                        dataController.getData();
-                      });
-                    }),
+                  tooltip: "Refresh",
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    setState(() {
+                      dataController.getData();
+                    });
+                  },
+                ),
               ],
             )
           ],
