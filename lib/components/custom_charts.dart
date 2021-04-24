@@ -18,12 +18,13 @@ class CustomCharts extends StatefulWidget {
 class _CustomChartsState extends State<CustomCharts> {
   List<String> chartDataHumidity = [];
   List<String> chartDataTime = [];
-  List<String> chartDataTime1 = ["05", "05", "03", "05"];
-  List<String>  chartDataHumidity1 =  ["44.00", "90.00", "50.00", "44.00"];
+  // List<String> chartDataTime1 = ["05", "05", "03", "05"];
+  // List<String>  chartDataHumidity1 =  ["44.00", "90.00", "50.00", "44.00"];
   bool isLoad = true;
   @override
   void initState() {
     setState(() {
+      print("==================");
       print(widget.chartTime);
       print(widget.chartHumidity);
       // chartDataHumidity = widget.chartHumidity;
@@ -36,17 +37,18 @@ class _CustomChartsState extends State<CustomCharts> {
   List<FlSpot> plots = [];
   customSpots() {
     print("----------");
-    print(chartDataTime1.length);
-    for (var i = 0; i < chartDataTime1.length; i++) {
+    print(chartDataTime.length);
+    for (var i = 0; i < chartDataTime.length; i++) {
       setState(() {
-        plots.add(FlSpot(double.parse(chartDataTime1[i]),
-            double.parse(chartDataHumidity1[i])));
-            print(double.parse(chartDataTime1[i]));
-             print(double.parse(chartDataHumidity1[i]));
+        plots.add(FlSpot(double.parse(chartDataTime[i]),
+            double.parse(chartDataHumidity[i])));
+            print(double.parse(chartDataTime[i]));
+             print(double.parse(chartDataHumidity[i]));
       });
     }
     print("------------");
     print(plots);
+    
     setState(() {
       isLoad = false;
     });
@@ -224,7 +226,7 @@ class _CustomChartsState extends State<CustomCharts> {
       ),
       minX: 0,
       maxX: chartDataHumidity.length.toDouble(),
-      maxY: chartDataHumidity.length.toDouble(),
+      maxY: chartDataTime.length.toDouble(),
       minY: 0,
       lineBarsData: linesBarData1(),
     );
