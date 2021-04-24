@@ -24,6 +24,30 @@ class _HumidityLogState extends State<HumidityLog>
 
   bool allDataLoading = false;
 
+  List<DataRow> getRows() {
+    dataController.isDataLoading.value = true;
+    print(">>>> cchange TRUE");
+
+    List<DataRow> rows = [];
+
+    for (var i = 0; i < dataController.date.length; i++) {
+      var item = DataRow(
+        cells: <DataCell>[
+          DataCell(Text((i + 1).toString())),
+          DataCell(Text(dataController.date[i])),
+          DataCell(Text(dataController.time[i])),
+          DataCell(Text(dataController.humidity[i])),
+          // DataCell(Text("--")),
+        ],
+      );
+
+      rows.add(item);
+    }
+    dataController.isDataLoading.value = false;
+    print(">>>> cchange FALSE");
+    return rows;
+  }
+
 // ------- ALL DATA ---------------------------------
 
   isLive() async {
@@ -230,27 +254,29 @@ class _HumidityLogState extends State<HumidityLog>
                 ],
               ),
               // SECOND HALF
-              Container(
-                margin: EdgeInsets.only(top: 10),
-                color: MyColors.primaryColor,
-                height: Get.height * .3,
-                child: CustomCharts(
-                  chartHumidity: humidity,
-                  chartTime: time,
-                ),
-              ),
+              // Container(
+              //   margin: EdgeInsets.only(top: 10),
+              //   color: MyColors.primaryColor,
+              //   height: Get.height * .3,
+              //   child: CustomCharts(
+              //     chartHumidity: humidity,
+              //     chartTime: time,
+              //   ),
+              // ),
               // THIRD HALF
               Container(
                 height: Get.height * .45,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SingleChildScrollView(
-                    child: DataTable(
+                    child: Obx(() => DataTable(
                         columnSpacing: 15,
                         columns: <DataColumn>[
                           DataColumn(
                             label: Text(
-                              'S. No. \n(' + time.length.toString() + ")",
+                              'S. No. \n(' +
+                                  dataController.time.length.toString() +
+                                  ")",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -275,7 +301,7 @@ class _HumidityLogState extends State<HumidityLog>
                         ],
                         dividerThickness:
                             dataController.isDataLoading.value ? 0 : 1,
-                        rows: !dataController.isDataLoading.value
+                        rows: dataController.isDataLoading.value
                             ? [
                                 DataRow(
                                   cells: <DataCell>[
@@ -315,7 +341,7 @@ class _HumidityLogState extends State<HumidityLog>
                                   ],
                                 ),
                               ]
-                            : []),
+                            : getRows())),
                   ),
                 ),
               ),

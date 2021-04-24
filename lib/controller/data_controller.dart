@@ -35,7 +35,7 @@ class DataController extends GetxController {
     temperature.clear();
     allRow.clear();
 
-    // await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 2));
     await fbRef.child("allData").once().then((DataSnapshot data) {
       print(">>>>>>>>>>>>>>>>>>> snapshot data :  $data");
       print(">>>>>>>>>>>>>>>>>>> snapshot data.value :  ${data.value.length}");
