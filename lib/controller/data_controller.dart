@@ -11,7 +11,7 @@ class DataController extends GetxController {
   var temperature = [].obs;
   var allRow = [].obs;
 
-// init methods
+// init methods is this
   void onInit() {
     this.fbInitializer();
     super.onInit();
