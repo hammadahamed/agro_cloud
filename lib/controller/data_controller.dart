@@ -48,10 +48,10 @@ class DataController extends GetxController {
         } else {
           var temp = value.split("@");
           print(temp);
-          this.date.add(temp[0]);
-          this.time.add(temp[1]);
-          this.humidity.add(temp[2]);
-          this.temperature.add(temp[3]);
+          this.date.add(temp[0].toString());
+          this.time.add(temp[1].toString());
+          this.humidity.add(temp[2].toString());
+          this.temperature.add(temp[3].toString());
 
           i++;
         }
