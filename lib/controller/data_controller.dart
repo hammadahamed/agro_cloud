@@ -40,6 +40,7 @@ class DataController extends GetxController {
     allRow.clear();
 
     await Future.delayed(Duration(seconds: 1));
+    //  await FirebaseDatabase.instance.reference().child("alldata").limitToFirst(3).onValue.first)
     await fbRef.child("allData").once().then((DataSnapshot data) {
       print(">>>>>>>>>>>>>>>>>>> snapshot data :  $data");
       print(">>>>>>>>>>>>>>>>>>> snapshot data.value :  ${data.value.length}");
@@ -61,6 +62,20 @@ class DataController extends GetxController {
         }
       });
     });
+    // (await FirebaseDatabase.instance
+    //         .reference()
+    //         .child('DataArray')
+    //         .orderByChild("Humidity")
+    //         .limitToFirst(3)
+    //         .onValue
+    //         .first)
+    //     .snapshot
+    //     .value
+    //     .values
+    //     .forEach((v) {
+    //       print("======================");
+    //   print(v['Humidity'].toString());
+    // });
 
     // var x = await FirebaseDatabase.instance
     //     .reference()

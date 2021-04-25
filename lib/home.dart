@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:agro_cloud/controller/auth_controller.dart';
+import 'package:agro_cloud/screens/chartsDummy.dart';
 import 'package:agro_cloud/screens/controls.dart';
 import 'controller/switch_controller.dart';
 import 'package:agro_cloud/screens/soilMoistureLog.dart';
@@ -16,7 +17,6 @@ import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
 import 'components/common_drawer.dart';
 import 'screens/humidityLog.dart';
-import 'package:agro_cloud/controller/data_controller.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -27,7 +27,6 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> with TickerProviderStateMixin {
   AuthController auth = Get.find();
   SwitchController switcher = Get.find();
-  DataController dataController = Get.find();
 
   final fb = FirebaseDatabase.instance;
   bool isLiveState = false;
@@ -52,8 +51,6 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     // timer = Timer.periodic(Duration(seconds: 5), (timer) {
     //   isLive();
     // });
-
-    dataController.getData();
 
     authenticate();
     super.initState();
@@ -169,10 +166,14 @@ class _Home extends State<Home> with TickerProviderStateMixin {
             actions: <Widget>[
               InkWell(
                 onTap: () {
-                  Navigator.push(
+                  // Navigator.push(
+                  //   context,
+                  //   new MaterialPageRoute(
+                  //     builder: (context) => User(),
+                       Navigator.push(
                     context,
                     new MaterialPageRoute(
-                      builder: (context) => User(),
+                      builder: (context) => DummyChartPage(),
                     ),
                   );
                 },

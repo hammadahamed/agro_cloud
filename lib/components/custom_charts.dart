@@ -18,14 +18,17 @@ class CustomCharts extends StatefulWidget {
 class _CustomChartsState extends State<CustomCharts> {
   List<String> chartDataHumidity = [];
   List<String> chartDataTime = [];
+  // List<String> chartDataTime1 = ["05", "05", "03", "05"];
+  // List<String>  chartDataHumidity1 =  ["44.00", "90.00", "50.00", "44.00"];
   bool isLoad = true;
   @override
   void initState() {
     setState(() {
+      print("==================");
       print(widget.chartTime);
       print(widget.chartHumidity);
-      chartDataHumidity = widget.chartHumidity;
-      chartDataTime = widget.chartTime;
+      // chartDataHumidity = widget.chartHumidity;
+      // chartDataTime = widget.chartTime;
     });
     customSpots();
     super.initState();
@@ -39,10 +42,13 @@ class _CustomChartsState extends State<CustomCharts> {
       setState(() {
         plots.add(FlSpot(double.parse(chartDataTime[i]),
             double.parse(chartDataHumidity[i])));
+            print(double.parse(chartDataTime[i]));
+             print(double.parse(chartDataHumidity[i]));
       });
     }
     print("------------");
     print(plots);
+    
     setState(() {
       isLoad = false;
     });
@@ -51,7 +57,7 @@ class _CustomChartsState extends State<CustomCharts> {
   @override
   Widget build(BuildContext context) {
     bool isShowingMainData = true;
-
+   
     Orientation mode = MediaQuery.of(context).orientation;
     double firstPart =
         mode == Orientation.landscape ? Get.height : Get.height * .4;
@@ -220,7 +226,7 @@ class _CustomChartsState extends State<CustomCharts> {
       ),
       minX: 0,
       maxX: chartDataHumidity.length.toDouble(),
-      maxY: chartDataHumidity.length.toDouble(),
+      maxY: chartDataTime.length.toDouble(),
       minY: 0,
       lineBarsData: linesBarData1(),
     );

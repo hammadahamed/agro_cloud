@@ -106,12 +106,12 @@ LineChartData sampleData1() {
       handleBuiltInTouches: true,
     ),
     gridData: FlGridData(
-      show: false,
+      show: true,
     ),
     titlesData: FlTitlesData(
       bottomTitles: SideTitles(
         showTitles: true,
-        reservedSize: 22,
+        reservedSize: 15,
         getTextStyles: (value) => const TextStyle(
           color: Color(0xff72719b),
           fontWeight: FontWeight.bold,
@@ -217,8 +217,8 @@ List<LineChartBarData> linesBarData1() {
     colors: [
       const Color(0xffaa4cfc),
     ],
-    barWidth: 8,
-    isStrokeCapRound: true,
+    barWidth: 1,
+    isStrokeCapRound: false,
     dotData: FlDotData(
       show: false,
     ),
