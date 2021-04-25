@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 class DataController extends GetxController {
   var fb;
   var fbRef;
+  var db;
 
   List<String> date = [];
   List<String> time = [];
@@ -23,12 +24,14 @@ class DataController extends GetxController {
 
   fbInitializer() {
     this.fb = FirebaseDatabase.instance;
+    // this.db = FirebaseDatabase.;
     this.fbRef = fb.reference();
   }
 
   var numberOfValues = 50;
   // DATA FETCHER ----------------->
   getData() async {
+    // db = FirebaseDatabase.g
     isDataLoading.value = true;
     date.clear();
     time.clear();
@@ -59,10 +62,19 @@ class DataController extends GetxController {
       });
     });
 
-    print(">>>> (${date.length}) - date \n>>> $date");
-    print(">>>> (${time.length}) - time \n>>> $time");
-    print(">>>> (${humidity.length}) - humidity \n>>> $humidity");
-    print(">>>> (${temperature.length}) - temperature \n>>> $temperature");
+    // var x = await FirebaseDatabase.instance
+    //     .reference()
+    //     .child("DataArray")
+    //     .orderByChild('dateTime')
+    //     .limitToLast(10);
+
+    // print(">>>> (${date.length}) - date \n>>> $date");
+    // print(">>>> (${time.length}) - time \n>>> $time");
+    // print(">>>> (${humidity.length}) - humidity \n>>> $humidity");
+    // print(">>>> (${temperature.length}) - temperature \n>>> $temperature");
+    // var x = time;
+    // x.sort();
+    // print("\n >>>>>>>>>> sorted >>>>>> $x");
 
     isDataLoading.value = false;
   }

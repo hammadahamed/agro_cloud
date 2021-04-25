@@ -1,106 +1,114 @@
+import 'dart:async';
+
 import 'package:agro_cloud/components/common_drawer.dart';
+import 'package:agro_cloud/components/custom_charts.dart';
+import 'package:agro_cloud/components/dummy_charts.dart';
+import 'package:agro_cloud/components/exportCSV.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:agro_cloud/utils.Dart';
-
-import '../components/exportCSV.dart';
+import 'package:agro_cloud/controller/data_controller.dart';
 
 class DatasTable extends StatefulWidget {
   @override
   _DatasTableState createState() => _DatasTableState();
 }
 
-class _DatasTableState extends State<DatasTable> {
+class _DatasTableState extends State<DatasTable> with TickerProviderStateMixin {
+  DataController dataController = Get.find();
   final fb = FirebaseDatabase.instance;
-  List<String> dateTime = [];
-  List<DataRow> allRow = [];
-  List<String> temperature = [];
-  List<String> time = [];
-  List<String> date = [];
-  List<String> humidity = [];
-  List<String> soilmoisture = [];
-  bool isLoad = false;
+  bool isLiveState = false;
+  var soilMoisture = [];
 
-  allData() async {
-    time.clear();
-    temperature.clear();
-    humidity.clear();
-    DateTime frmt;
-    String t;
-    final ref = fb.reference();
-    await ref.child("DataArray").once().then((DataSnapshot data) {
-      data.value["DateTime"].forEach((key, value) => {
-            soilmoisture.add("NA"),
-            dateTime = value.split(RegExp(r"[T,+]")),
-            frmt = new DateFormat("yyyy-MM-dd HH:mm:ss")
-                .parse(dateTime[0] + " " + dateTime[1]),
-            t = new TimeOfDay(
-              hour: frmt.hour,
-              minute: frmt.minute,
-            ).format(context),
-            t = t.replaceFirst(" ", ":" + frmt.second.toString() + " "),
-            print(t),
-            time.add(t),
-            date.add(dateTime[0])
-          });
-      data.value["Temperature"].forEach((key, value) => {
-            temperature.add(value),
-          });
-      data.value["Humidity"].forEach((key, value) => {
-            humidity.add(value),
-          });
-    });
+  // GENERATE ROWS
+  List<DataRow> getRows() {
+    dataController.isDataLoading.value = true;
+    print(">>>> cchange TRUE");
 
-    setState(() {
-      allRow.clear();
-    });
+    List<DataRow> rows = [];
+    for (var i = 0; i < dataController.date.length; i++) {
+      soilMoisture.add("NA");
+      var item = DataRow(
+        cells: <DataCell>[
+          DataCell(Text(dataController.date[i])),
+          DataCell(Text(dataController.time[i])),
+          DataCell(Text(dataController.humidity[i])),
+          DataCell(Text(dataController.temperature[i])),
+          DataCell(Text("NA")),
+          // DataCell(Text("--")),
+        ],
+      );
 
-    for (var i = 0; i < time.length; i++) {
-      int j = i + 1;
-      int len = time.length;
-      setState(() {
-        allRow.add(
-          DataRow(
-            selected: i % 2 == 0 ? true : false,
-            cells: <DataCell>[
-              DataCell(Text("$j of $len")),
-              DataCell(Text(date[i])),
-              DataCell(Text(time[i])),
-              DataCell(Text(temperature[i])),
-              DataCell(Text(humidity[i])),
-              DataCell(Text("NA")),
-            ],
-          ),
-        );
-      });
+      rows.add(item);
     }
+    dataController.isDataLoading.value = false;
+    print(">>>> cchange FALSE");
+    return rows;
   }
 
+// ------- ALL DATA ---------------------------------
+
+  isLive() async {
+    final re = fb.reference();
+    await re.child("TimeStamp").once().then((DataSnapshot data) {
+      int diff = 0;
+      String time = data.value;
+      List<String> splitted = time.split(RegExp(r"[T,+]"));
+      String currTime =
+          new DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+      DateTime nowTime = DateTime.parse(currTime);
+      DateTime lastTime = DateTime.parse(splitted[0] + ' ' + splitted[1]);
+      diff = nowTime.difference(lastTime).inSeconds;
+      if (diff > 8 && isLiveState) {
+        setState(() {
+          isLiveState = false;
+        });
+      } else if (diff < 8 && !isLiveState) {
+        setState(() {
+          isLiveState = true;
+        });
+      }
+    });
+  }
+
+  Timer timer;
   @override
   void initState() {
-    allData();
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      isLive();
+    });
     super.initState();
   }
 
   @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
-    // final ref = fb.reference();
-    return Scaffold(
+    List<dynamic> date = dataController.date;
+    List<dynamic> time = dataController.time;
+    List<dynamic> humidity = dataController.humidity;
+    List<dynamic> temperature = dataController.temperature;
+
+    return SafeArea(
+      child: Scaffold(
         drawer: CommonDrawer(),
         appBar: AppBar(
           iconTheme: IconThemeData(color: MyColors.primaryColor),
-          backgroundColor: Get.isDarkMode ? null : Colors.white,
           title: Text(
-            "All Data Log",
+            "All Data Logs",
             style: TextStyle(
               fontFamily: "NunitoSans-semibold",
               color: Get.isDarkMode ? Colors.white : MyColors.primaryColor,
             ),
           ),
+          backgroundColor: Get.isDarkMode ? null : Colors.white,
           actions: [
             Row(
               children: [
@@ -118,7 +126,9 @@ class _DatasTableState extends State<DatasTable> {
                             child: ListBody(
                               children: <Widget>[
                                 Text(
-                                    'Are you sure want to Export All the Data Table?'),
+                                    'Are you sure want to Export All the Data from the Humidity Table?'),
+                                // Text(
+                                //     'Would you like to approve of this message?'),
                               ],
                             ),
                           ),
@@ -127,7 +137,7 @@ class _DatasTableState extends State<DatasTable> {
                               child: Text('Yes'),
                               onPressed: () {
                                 allCsv(date, time, temperature, humidity,
-                                    soilmoisture);
+                                    soilMoisture);
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -144,128 +154,121 @@ class _DatasTableState extends State<DatasTable> {
                   },
                 ),
                 IconButton(
-                    tooltip: "Refresh",
-                    icon: Icon(Icons.refresh),
-                    onPressed: () async {
-                      setState(() {
-                        isLoad = true;
-                      });
-                      await Future.delayed(Duration(milliseconds: 3000), () {
-                        allData();
-                      });
-                      setState(() {
-                        isLoad = false;
-                      });
-                    }),
+                  tooltip: "Refresh",
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    setState(() {
+                      dataController.getData();
+                    });
+                  },
+                ),
               ],
-            ),
+            )
           ],
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
+        body: Container(
+          height: Get.height,
+          width: Get.width,
           child: Center(
-              child: Column(
-            children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Column(
-                  children: [
-                    DataTable(
-                        columns: const <DataColumn>[
-                          DataColumn(
-                            label: Text(
-                              'S. No.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Date',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Time',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Temperature',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Humidity',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Soil Moisture',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                        dividerThickness: isLoad ? 0 : 1,
-                        rows: !isLoad
-                            ? allRow
-                            : [
-                                DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                  ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SingleChildScrollView(
+                child: Obx(() => DataTable(
+                    columnSpacing: Get.width * .035,
+                    horizontalMargin: 10,
+                    headingRowHeight: 75,
+                    columns: dataController.isDataLoading.value
+                        ? <DataColumn>[
+                            DataColumn(
+                              label: Text(
+                                'Loading ... ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.pink[600],
                                 ),
-                                DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                  ],
+                              ),
+                            )
+                          ]
+                        : <DataColumn>[
+                            DataColumn(
+                              label: Text(
+                                'Date',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.pink[600],
                                 ),
-                                DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(Text("")),
-                                    DataCell(Center(
-                                      child: SpinKitDoubleBounce(
-                                        color: MyColors.primaryColor,
-                                        size: 50.0,
-                                      ),
-                                    )),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                    DataCell(Text("")),
-                                  ],
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Time',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.pink[600],
                                 ),
-                              ]),
-                  ],
-                ),
-              )
-            ],
-          )),
-        ));
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Humidity\n( % )',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.pink[600],
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Temperature\n( °c )',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.pink[600],
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Soil\nMoisture',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.pink[600],
+                                ),
+                              ),
+                            ),
+                          ],
+                    dividerThickness:
+                        dataController.isDataLoading.value ? 0 : 1,
+                    rows: dataController.isDataLoading.value
+                        ? [
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(Text("")),
+                              ],
+                            ),
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(Center(
+                                  child: SpinKitDoubleBounce(
+                                    color: MyColors.primaryColor,
+                                    size: 50.0,
+                                  ),
+                                )),
+                              ],
+                            ),
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(Text("")),
+                              ],
+                            ),
+                          ]
+                        : getRows())),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

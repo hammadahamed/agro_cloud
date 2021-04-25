@@ -155,9 +155,7 @@ class _TemperatureLogState extends State<TemperatureLog>
                   tooltip: "Refresh",
                   icon: Icon(Icons.refresh),
                   onPressed: () {
-                    setState(() {
-                      dataController.getData();
-                    });
+                    dataController.getData();
                   },
                 ),
               ],
@@ -266,73 +264,72 @@ class _TemperatureLogState extends State<TemperatureLog>
                   child: SingleChildScrollView(
                     child: Obx(() => DataTable(
                         columnSpacing: 15,
-                        columns: <DataColumn>[
-                          DataColumn(
-                            label: Text(
-                              'S. No. \n(' +
-                                  dataController.time.length.toString() +
-                                  ")",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Date',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Time',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Temperature',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
+                        columns: dataController.isDataLoading.value
+                            ? <DataColumn>[
+                                DataColumn(
+                                  label: Text(
+                                    'Loading ... ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.pink[600],
+                                    ),
+                                  ),
+                                )
+                              ]
+                            : <DataColumn>[
+                                DataColumn(
+                                  label: Text(
+                                    'S. No. \n(' +
+                                        dataController.time.length.toString() +
+                                        ")",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    'Date',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    'Time',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    'Temperature',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
                         dividerThickness:
                             dataController.isDataLoading.value ? 0 : 1,
                         rows: dataController.isDataLoading.value
                             ? [
                                 DataRow(
                                   cells: <DataCell>[
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
+                                    DataCell(Text("")),
                                   ],
                                 ),
                                 DataRow(
                                   cells: <DataCell>[
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
                                     DataCell(Center(
                                       child: SpinKitDoubleBounce(
                                         color: MyColors.primaryColor,
                                         size: 50.0,
                                       ),
                                     )),
-                                    DataCell(Text("--")),
                                   ],
                                 ),
                                 DataRow(
                                   cells: <DataCell>[
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
-                                    DataCell(Text("--")),
+                                    DataCell(Text("")),
                                   ],
                                 ),
                               ]
